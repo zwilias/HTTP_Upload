@@ -65,6 +65,13 @@ class HTTP_Upload_Error extends PEAR
     var $lang = 'en';
 
     /**
+     *   Should the error messages be returned as HTML?
+     *
+     * @var boolean
+     */
+    var $html = FALSE;
+
+    /**
      * Constructor
      *
      * Creates a new PEAR_Error
@@ -72,10 +79,12 @@ class HTTP_Upload_Error extends PEAR
      * @param string $lang The language selected for error code messages
      * @access public
      */
-    function HTTP_Upload_Error($lang = null)
+    function HTTP_Upload_Error($lang = NULL, $html = FALSE)
     {
-        $this->lang = ($lang !== null) ? $lang : $this->lang;
         global $HTTP_POST_VARS;
+
+        $this->lang = ($lang !== NULL) ? $lang : $this->lang;
+        $this->html = ($html !== FALSE) ? $html : $this->html;
         $maxsize = (isset($HTTP_POST_VARS['MAX_FILE_SIZE'])) ? $HTTP_POST_VARS['MAX_FILE_SIZE'] : null;
         $ini_size = ini_get('upload_max_filesize');
         if (empty($maxsize) || ($maxsize > $ini_size)) {
@@ -196,10 +205,10 @@ class HTTP_Upload_Error extends PEAR
      */
     function errorCode($e_code)
     {
-        if (isset($this->lang) &&
-            !empty($this->error_codes[$e_code][$this->lang]))
-        {
-            $msg = $this->error_codes[$e_code][$this->lang];
+        if (!empty($this->error_codes[$e_code][$this->lang])) {
+            $msg = $this->html ?
+                html_entity_decode($this->error_codes[$e_code][$this->lang]) :
+                $this->error_codes[$e_code][$this->lang];
         } else {
             $msg = $e_code;
         }
@@ -243,12 +252,14 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @see Upload_Error::error_codes
      * @access public
      */
-    function HTTP_Upload($lang = null)
+    function HTTP_Upload($lang = NULL)
     {
         $this->HTTP_Upload_Error($lang);
         global $HTTP_POST_FILES, $HTTP_SERVER_VARS;
         $this->post_files   = $HTTP_POST_FILES;
-        $this->content_type = $HTTP_SERVER_VARS['CONTENT_TYPE'];
+        if (isset($HTTP_SERVER_VARS['CONTENT_TYPE'])) {
+            $this->content_type = $HTTP_SERVER_VARS['CONTENT_TYPE'];
+        }
     }
 
     /**

@@ -164,6 +164,7 @@ class HTTP_Upload_Error extends PEAR
                 'es'    => 'No puedo mover el fichero.',
                 'en'    => 'Impossible to move the file.',
                 'de'    => 'Datei kann nicht verschoben werden.',
+                'nl'    => 'Het bestand kon niet verplaatst worden.',
                 'fr'    => 'Impossible de d&eacute;placer le fichier.',
                 'pt_BR' => 'N&atilde;o foi poss&iacute;vel mover o arquivo.'
                 ),
@@ -198,18 +199,21 @@ class HTTP_Upload_Error extends PEAR
                 'es'    => 'El fichero fue parcialmente subido',
                 'en'    => 'The file was only partially uploaded.',
                 'de'    => 'Die Datei wurde unvollst&auml;ndig &uuml;bertragen.',
+                'nl'    => 'Het bestand is slechts gedeeltelijk geupload.',
                 'pt_BR' => 'O arquivo não foi enviado por completo.'
                 ),
             'ERROR' => array(
                 'es'    => 'Error en subida:',
                 'en'    => 'Upload error:',
                 'de'    => 'Fehler beim Upload:',
+                'nl'    => 'Upload fout:',
                 'pt_BR' => 'Erro de upload:'
                 ),
             'DEV_NO_DEF_FILE' => array(
                 'es'    => 'No está definido en el formulario este nombre de fichero como &lt;input type="file" name=?&gt;.',
                 'en'    => 'This filename is not defined in the form as &lt;input type="file" name=?&gt;.',
                 'de'    => 'Dieser Dateiname ist in der Datei nicht als &lt;input type="file" name=?&gt; definiert.',
+                'nl'    => 'Deze bestandsnaam is niett gedefineerd in het formulier als &lt;input type="file" name=?&gt;.'
                 )
         );
     }
@@ -254,6 +258,7 @@ class HTTP_Upload_Error extends PEAR
 /**
  * This class provides an advanced file uploader system
  * for file uploads made from html forms
+
  *
  * @author  Tomas V.V.Cox <cox@idecnet.com>
  * @see http://vulcanonet.com/soft/index.php?pack=uploader

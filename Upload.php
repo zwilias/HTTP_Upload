@@ -106,7 +106,8 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => "Le fichier est trop gros. La taille maximum autoris&eacute;e est: $maxsize bytes.",
                 'it'    => "Il file &eacute; troppo grande. Il massimo permesso &eacute: $maxsize bytes.",
                 'pt_BR' => "Arquivo muito grande. O tamanho m&aacute;ximo permitido &eacute; $maxsize bytes.",
-				'sv'    => "Filen &auml;r f&ouml;r stor. St&ouml;rsta till&aring;tna filstorlek &auml;r: $maxsize bytes"
+				'sv'    => "Filen &auml;r f&ouml;r stor. St&ouml;rsta till&aring;tna filstorlek &auml;r: $maxsize bytes",
+				'da'    => "Filen er for stor. St&oslash;rste tilladte filst&oslash;rrelse er : $maxsize bytes"
                 ),
             'MISSING_DIR' => array(
                 'es'    => 'Falta directorio destino.',
@@ -116,8 +117,9 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => 'Le r&eacute;pertoire de destination n\'est pas d&eacute;fini.',
                 'it'    => 'Manca la directory di destinazione.',
                 'pt_BR' => 'Aus&ecirc;ncia de diret&oacute;rio de destino.',
-				'sv'    => "Saknar destinationskatalog"
-                ),
+				'sv'    => "Saknar destinationskatalog",
+				'da'    => "Mangler destinationskatalog"
+),
             'IS_NOT_DIR' => array(
                 'es'    => 'El directorio destino no existe o es un fichero regular.',
                 'en'    => 'The destination directory doesn\'t exist or is a regular file.',
@@ -126,7 +128,8 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => 'Le r&eacute;pertoire de destination n\'existe pas ou il s\'agit d\'un fichier r&eacute;gulier.',
                 'it'    => 'La directory di destinazione non esiste o &eacute; un file.',
                 'pt_BR' => 'O diret&oacute;rio de destino n&atilde;o existe ou &eacute; um arquivo.',
-                'sv'    => "Destinationskatalogen existerar inte, eller &auml;r en vanlig fil"
+                'sv'    => "Destinationskatalogen existerar inte, eller &auml;r en vanlig fil",
+				'da'    => "Destinationskatalogen eksisterer ikke, eller er en almindelig fil"
                 ),
             'NO_WRITE_PERMS' => array(
                 'es'    => 'El directorio destino no tiene permisos de escritura.',
@@ -136,7 +139,8 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => 'Le r&eacute;pertoire de destination n\'a pas les droits en &eacute;criture.',
                 'it'    => 'Non si hanno i permessi di scrittura sulla directory di destinazione.',
                 'pt_BR' => 'O diret&oacute;rio de destino n&atilde;o possui permiss&atilde;o para escrita.',
-                'sv'    => 'Destinationskatalogen har inte skrivr&auml;ttigheter'
+                'sv'    => 'Destinationskatalogen har inte skrivr&auml;ttigheter',
+				'da'    => 'Destinationskatalogen har ikke skrivrettigheder'
                 ),
             'NO_USER_FILE' => array(
                 'es'    => 'No se ha escogido fichero para el upload.',
@@ -146,7 +150,8 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => 'Vous n\'avez pas s&eacute;lectionn&eacute; de fichier &agrave; envoyer.',
                 'it'    => 'Nessun file selezionato per l\'upload.',
                 'pt_BR' => 'Nenhum arquivo selecionado para upload.',
-                'sv' => 'Du har inte valt n&aring;gon fil att ladda upp'
+                'sv'    => 'Du har inte valt n&aring;gon fil att ladda upp',
+				'da'    => 'Du har ikke valgt nogen fil at uploade'
                 ),
             'BAD_FORM' => array(
                 'es'    => 'El formulario no contiene method="post" enctype="multipart/form-data" requerido.',
@@ -161,6 +166,8 @@ class HTTP_Upload_Error extends PEAR
                            ' method="post" enctype="multipart/form-data".',
                 'pt_BR' => 'O formul&aacute;rio HTML n&atilde;o possui o method="post" enctype="multipart/form-data" requerido.',
                 'sv'    => 'HTML-formul&auml;ret inneh&aring;ller inte de attribut som kr&auml;vs: '.
+                        ' method="post" enctype="multipart/form-data"',
+                'da'    => 'HTML-formularen mangler disse indstillinger: '.
                         ' method="post" enctype="multipart/form-data"'
                 ),
             'E_FAIL_COPY' => array(
@@ -171,7 +178,8 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => 'L\'enregistrement du fichier temporaire a &eacute;chou&eacute;.',
                 'it'    => 'Copia del file temporaneo fallita.',
                 'pt_BR' => 'Falha ao copiar o arquivo tempor&aacute;rio.',
-                'sv'    => 'Misslyckades med att kopiera den tempor&auml;ra filen'
+                'sv'    => 'Misslyckades med att kopiera den tempor&auml;ra filen',
+				'da'    => 'Det lykkedes ikke at kopiere den tempor&aelig;re fil'
                 ),
             'E_FAIL_MOVE' => array(
                 'es'    => 'No puedo mover el fichero.',
@@ -180,7 +188,8 @@ class HTTP_Upload_Error extends PEAR
                 'nl'    => 'Het bestand kon niet verplaatst worden.',
                 'fr'    => 'Impossible de d&eacute;placer le fichier.',
                 'pt_BR' => 'N&atilde;o foi poss&iacute;vel mover o arquivo.',
-                'sv'    => 'Misslyckades med att flytta den tempor&auml;ra filen'
+                'sv'    => 'Misslyckades med att flytta den tempor&auml;ra filen',
+				'da'    => 'Det lykkedes ikke at flytta den tempor&aelig;re fil'
                 ),
             'FILE_EXISTS' => array(
                 'es'    => 'El fichero destino ya existe.',
@@ -190,7 +199,8 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => 'Le fichier de destination existe d&eacute;j&agrave;.',
                 'it'    => 'File destinazione gi&agrave; esistente.',
                 'pt_BR' => 'O arquivo de destino j&aacute; existe.',
-                'sv'    => 'Destinationsfilen existerar redan'
+                'sv'    => 'Destinationsfilen existerar redan',
+				'da'    => 'Destinationsfilen findes allerede'
                 ),
             'CANNOT_OVERWRITE' => array(
                 'es'    => 'El fichero destino ya existe y no se puede sobreescribir.',
@@ -200,7 +210,8 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => 'Le fichier de destination existe d&eacute;j&agrave; et ne peux pas &ecirc;tre remplac&eacute;.',
                 'it'    => 'File destinazione gi&agrave; esistente e non si pu&ograve; sovrascrivere.',
                 'pt_BR' => 'O arquivo de destino j&aacute; existe e n&atilde;o p&ocirc;de ser sobrescrito.',
-                'sv'    => 'Destinationsfilen existerar redan och kunde inte skrivas &ouml;ver'
+                'sv'    => 'Destinationsfilen existerar redan och kunde inte skrivas &ouml;ver',
+				'da'    => 'Destinationsfilen findes allerede og kunne ikke overskrives'
                 ),
             'NOT_ALLOWED_EXTENSION' => array(
                 'es'    => 'Extension de fichero no permitida.',
@@ -210,7 +221,8 @@ class HTTP_Upload_Error extends PEAR
                 'fr'    => 'Le fichier a une extension non autoris&eacute;e.',
                 'it'    => 'Estensione del File non permessa.',
                 'pt_BR' => 'Extens&atilde;o de arquivo n&atilde;o permitida.',
-                'sv'    => 'Ej till&aring;ten fil&auml;ndelse'
+                'sv'    => 'Ej till&aring;ten fil&auml;ndelse',
+				'da'    => 'Ikke tilladt filformat'
                 ),
             'PARTIAL' => array(
                 'es'    => 'El fichero fue parcialmente subido',
@@ -218,7 +230,8 @@ class HTTP_Upload_Error extends PEAR
                 'de'    => 'Die Datei wurde unvollst&auml;ndig &uuml;bertragen.',
                 'nl'    => 'Het bestand is slechts gedeeltelijk geupload.',
                 'pt_BR' => 'O arquivo n&atilde;o foi enviado por completo.',
-                'sv'    => 'Filen blev endast delvis uppladdad.'
+                'sv'    => 'Filen blev endast delvis uppladdad.',
+				'da'    => 'Filen blev kun delvis uploadet.'
                 ),
             'ERROR' => array(
                 'es'    => 'Error en subida:',
@@ -226,7 +239,8 @@ class HTTP_Upload_Error extends PEAR
                 'de'    => 'Fehler beim Upload:',
                 'nl'    => 'Upload fout:',
                 'pt_BR' => 'Erro de upload:',
-                'sv'    => 'Fel vid upladdning:'
+                'sv'    => 'Fel vid upladdning:',
+				'da'    => 'Fejl ved upload:'
                 ),
             'DEV_NO_DEF_FILE' => array(
                 'es'    => 'No est&aacute; definido en el formulario este nombre de fichero como &lt;input type="file" name=?&gt;.',
@@ -234,7 +248,8 @@ class HTTP_Upload_Error extends PEAR
                 'de'    => 'Dieser Dateiname ist im Formular nicht als &lt;input type="file" name=?&gt; definiert.',
                 'nl'    => 'Deze bestandsnaam is niett gedefineerd in het formulier als &lt;input type="file" name=?&gt;.',
                 'pt_BR' => 'Este arquivo n&atilde;o foi definido no formul&aacute;rio como  &lt;input type="file" name=?&gt;.',
-                'sv'    => 'Detta filnamn &auml;r inte definierat i formul&auml;ret som &lt;input type="file" name=?&gt;.'
+                'sv'    => 'Detta filnamn &auml;r inte definierat i formul&auml;ret som &lt;input type="file" name=?&gt;.',
+				'da'    => 'Dette filnavn er ikke definieret i formularen som &lt;input type="file" name=?&gt;.'
                 )
         );
     }

@@ -11,10 +11,9 @@
   </Maintainer>
 
   <Release>
-    <Version>0.6.2</Version>
-    <Date>2001-08-11</Date>
-    <Notes>
-      This is the initial release of the package in the pear repo.
+    <Version>0.6.3</Version>
+    <Date>2001-08-12</Date>
+    <Notes>Added english translations for error messages
     </Notes>
   </Release>
 

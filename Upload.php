@@ -27,7 +27,7 @@
 *
 * -- Note for users of PHP > 4.1 --
 *
-* Due the fact that PHP now doen't register the HTTP_POST_FILES if no
+* Due the fact that PHP now doesn't register the HTTP_POST_FILES if no
 * uploads are done, the class is not able to give verbose information
 * about what happens. To check that you have to use the new isMissing()
 * method avaible from the $upload object too. For ex:
@@ -181,7 +181,7 @@ class HTTP_Upload_Error extends PEAR
     */
     function raiseError($e_code)
     {
-        return PEAR::raiseError($this->errorCode($e_code));
+        return PEAR::raiseError($this->errorCode($e_code), $e_code);
     }
 }
 

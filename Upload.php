@@ -103,8 +103,8 @@ class HTTP_Upload_Error extends PEAR
                 'de' => 'Die zu erzeugende Datei existiert bereits und konnte nicht &uuml;berschrieben werden'
                 ),
             'NOT_ALLOWED_EXTENSION' => array(
-                'es' => 'Extension de fichero no valida',
-                'en' => 'Not valid file extension'
+                'es' => 'Extension de fichero no permitida',
+                'en' => 'Not permitted file extension'
                 )
         );
     }
@@ -337,9 +337,16 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         switch ($mode) {
             case 'uniq':
                 $name = $this->nameToUniq();
+                $this->upload['ext'] = $this->nameToSafe($this->upload['ext'], 10);
+                $name .= '.' . $this->upload['ext'];
                 break;
             case 'safe':
                 $name = $this->nameToSafe($this->upload['real']);
+                if (($pos = strrpos($name, '.')) !== false) {
+                    $this->upload['ext'] = substr($name, $pos + 1);
+                } else {
+                    $this->upload['ext'] = '';
+                }
                 break;
             case 'real':
                 $name = $this->upload['real'];
@@ -362,9 +369,8 @@ class HTTP_Upload_File extends HTTP_Upload_Error
             srand((double) microtime() * 1000000);
             $this->_seeded = 1;
         }
-
         $uniq = uniqid(rand());
-        return $uniq . '.' . $this->nameToSafe($this->upload['ext'],10);
+        return $uniq;
     }
 
     /**

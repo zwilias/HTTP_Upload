@@ -257,7 +257,7 @@ class HTTP_Upload extends HTTP_Upload_Error
     {
         $this->HTTP_Upload_Error($lang);
         global $HTTP_POST_FILES, $HTTP_SERVER_VARS;
-        $this->post_files   = $HTTP_POST_FILES;
+        $this->post_files = $HTTP_POST_FILES;
         if (isset($HTTP_SERVER_VARS['CONTENT_TYPE'])) {
             $this->content_type = $HTTP_SERVER_VARS['CONTENT_TYPE'];
         }
@@ -359,7 +359,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      */
     function isMissing()
     {
-        if (empty($this->post_files) || count($this->post_files) < 1) {
+        if (count($this->post_files) < 1) {
             return $this->raiseError('NO_USER_FILE');
         }
         return false;

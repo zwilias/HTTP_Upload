@@ -14,7 +14,6 @@
 * submitted via HTML Forms.
 *
 * @see http://vulcanonet.com/soft/index.php?pack=uploader
-* @version v.0.6.1 2001-08-10
 * @author Tomas V.V.Cox <cox@vulcanonet.com>
 *
 *
@@ -52,39 +51,39 @@ class HTTP_Upload_Error extends PEAR
         $this->error_codes = array(
             'TOO_LARGE' => array(
                 'es' => "Fichero demasiado largo. El maximo permitido es: $maxsize bytes",
-                'en' => ''
+                'en' => "Too long file size. The maximun permited size is: $maxsize bytes"
                 ),
             'MISSING_DIR' => array(
                 'es' => 'Falta directorio destino',
-                'en' => ''
+                'en' => 'Missing destination directory'
                 ),
             'IS_NOT_DIR' => array(
                 'es' => 'El directorio destino no existe o es un fichero regular',
-                'en' => ''
+                'en' => 'The destination directory doesn\'t exist or is a regular file'
                 ),
             'NO_WRITE_PERMS' => array(
                 'es' => 'El directorio destino no tiene permisos de escritura',
-                'en' => ''
+                'en' => 'The destination directory doesn\'t have write perms'
                 ),
             'NO_USER_FILE' => array(
                 'es' => 'No se ha escogido fichero para el upload',
-                'en' => ''
+                'en' => 'You haven\'t selected any file for uploading'
                 ),
             'BAD_FORM' => array(
                 'es' => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido',
-                'en' => ''
+                'en' => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data"'
                 ),
             'E_FAIL_COPY' => array(
                 'es' => 'Fallo al copiar el fichero temporal',
-                'en' => ''
+                'en' => 'Fail to copy the temp file'
                 ),
             'FILE_EXISTS' => array(
                 'es' => 'El fichero destino ya existe',
-                'en' => ''
+                'en' => 'The destination file yet exists'
                 ),
-            'CANNOT_OVERRIDE' => array(
+            'CANNOT_OVERWRITE' => array(
                 'es' => 'El fichero destino ya existe y no se puede sobreescribir',
-                'en' => ''
+                'en' => 'The destination file yet exists and could not be overwritten'
                 )
         );
     }
@@ -329,10 +328,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * con nombre $name_dest.
     *
     * @param string $dir_dest
-    * @param bool $override
+    * @param bool $overwrite
     * @return mixed True on success or Pear_Error object on errors
     */
-    function moveTo ($dir_dest, $override=true)
+    function moveTo ($dir_dest, $overwrite=true)
     {
         if (OS_WINDOWS) {
             return $this->raiseError('not tested yet');
@@ -352,11 +351,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
 
         $is_file = @is_file($name_dest);
 
-        if (($override !== true) && $is_file) {
+        if (($overwrite !== true) && $is_file) {
             return $this->raiseError('FILE_EXISTS');
         }
         if ($is_file && !is_writable($name_dest)) {
-            return $this->raiseError('CANNOT_OVERRIDE');
+            return $this->raiseError('CANNOT_OVERWRITE');
         }
         // Copy the file and let php clean the tmp
         if (!@copy ($this->upload['tmp_name'], $name_dest)) {

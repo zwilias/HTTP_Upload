@@ -3,7 +3,7 @@
 //
 // This software is licensed by the LGPL
 // -> http://www.gnu.org/copyleft/lesser.txt
-// (c) 2001 by Tomas Von Veschler
+// (c) 2001 by Tomas Von Veschler Cox
 //
 // **********************************************
 //
@@ -15,10 +15,6 @@
 *
 * @see http://vulcanonet.com/soft/index.php?pack=uploader
 * @author Tomas V.V.Cox <cox@vulcanonet.com>
-*
-*
-* TODO:
-* - PHPDoc clean-up
 *
 * Leyend:
 * - you can add error msgs in your language in the HTTP_Upload_Error class
@@ -88,8 +84,8 @@ class HTTP_Upload_Error extends PEAR
             'BAD_FORM' => array(
                 'es' => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido',
                 'en' => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data"',
-                'de' => 'Das HTML-Formular enthält nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data"
-                         im &gt;action&lt;-Tag'
+                'de' => 'Das HTML-Formular enthält nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data" '.
+                        'im &gt;from&lt;-Tag'
                 ),
             'E_FAIL_COPY' => array(
                 'es' => 'Fallo al copiar el fichero temporal',
@@ -113,7 +109,6 @@ class HTTP_Upload_Error extends PEAR
     *
     * @param    string $e_code  type of error
     * @return   string          Error message
-    * @access   public
     */
     function errorCode($e_code)
     {
@@ -141,7 +136,7 @@ class HTTP_Upload_Error extends PEAR
 }
 
 /**
-* This class provides an advanced file uploader system 
+* This class provides an advanced file uploader system
 * for file uploads made from html forms
 *
 * @author   Tomas V.V.Cox <cox@vulcanonet.com>
@@ -151,7 +146,7 @@ class HTTP_Upload_Error extends PEAR
 class HTTP_Upload extends HTTP_Upload_Error
 {
     /**
-    * Contains the files
+    * Contains an array of "uploaded files" objects
     * @var array
     */
     var $files = array();
@@ -263,8 +258,9 @@ class HTTP_Upload extends HTTP_Upload_Error
 class HTTP_Upload_File extends HTTP_Upload_Error
 {
     /**
-    * ???
-    * @var  boolean ;
+    * If the random seed was initialized before or not
+    * @var  boolean;
+    */
     var $_seeded = 0;
 
     /**
@@ -272,7 +268,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @var array
     */
     var $upload = array();
-    
+
     /**
     * If user haven't selected a mode, by default 'safe' will be used
     * @var boolean
@@ -282,13 +278,13 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
     * Constructor
     *
-    * @param    string  $name       destination file name
-    * @param    string  $tmp        temp file name
-    * @param    string  $formname   name of the form
-    * @param    string  $type       Mime type of the file
-    * @param    string  $size       size of the file
-    * @param    string  $lang       used language for errormessages
-    * @access   public
+    * @param   string  $name       destination file name
+    * @param   string  $tmp        temp file name
+    * @param   string  $formname   name of the form
+    * @param   string  $type       Mime type of the file
+    * @param   string  $size       size of the file
+    * @param   string  $lang       used language for errormessages
+    * @access  public
     */
     function HTTP_Upload_File ($name=null, $tmp=null,  $formname=null,
                                $type=null, $size=null, $lang=null)
@@ -322,11 +318,12 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
     * Sets the name of the destination file
     *
-    * @param string $mode       A valid mode: 'uniq', 'safe' or 'real' or a file name
-    * @param string $prepend    A string to prepend to the name
-    * @param string $append     A string to append to the name
+    * @param string $mode     A valid mode: 'uniq', 'safe' or 'real' or a file name
+    * @param string $prepend  A string to prepend to the name
+    * @param string $append   A string to append to the name
     *
     * @return string The modified name of the destination file
+    * @access public
     */
     function setName ($mode, $prepend=null, $append=null)
     {
@@ -350,7 +347,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
 
     /**
     * Unique file names in the form: 9022210413b75410c28bef.html
-    * @access public    
+    * @see HTTP_Upload_File::setName()
     */
     function nameToUniq ()
     {
@@ -369,7 +366,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @param    string $file   The string file name
     * @param    int    $maxlen Maximun permited string lenght
     * @return   string Formatted file name
-    * @access public    
+    * @see HTTP_Upload_File::setName()
     */
     function nameToSafe ($name, $maxlen=250)
     {
@@ -380,12 +377,12 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         // not permitted chars are replaced with "_"
         return ereg_replace ('[^a-zA-Z0-9,._\+\()\-]', '_', $name);
     }
-    
+
     /**
     * The upload was valid
     *
     * @return bool If the file was submitted correctly
-    * @access public    
+    * @access public
     */
     function isValid()
     {
@@ -394,12 +391,12 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         }
         return false;
     }
-    
+
     /**
     * User haven't submit a file
     *
     * @return bool If the user submitted a file or not
-    * @access public    
+    * @access public
     */
     function isMissing()
     {
@@ -408,13 +405,13 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         }
         return false;
     }
-    
+
     /**
     * Some error occured during upload (most common due a file size problem,
     * like max size exceeded or 0 bytes long).
     * @return bool If there were errors submitting the file (probably
     *              because the file excess the max permitted file size)
-    * @access public    
+    * @access public
     */
     function isError()
     {
@@ -425,14 +422,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * It copies the raised file number $filepos, to the directory $dir_dest with 
-    * name $name_dest. ( Thanks to babelfish)
+    * Moves the uploaded file to its destination directory.
     *
-    * Copia el fichero subido numero $filepos, al directorio $dir_dest
-    * con nombre $name_dest.
-    *
-    * @param    string  $dir_dest
-    * @param    bool    $overwrite
+    * @param    string  $dir_dest  Destination directory
+    * @param    bool    $overwrite Overwrite if destination file exists?
     * @return   mixed   True on success or Pear_Error object on error
     * @access public
     */
@@ -478,7 +471,6 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     *
     * @param    string  $dir_dest Destination dir
     * @return   mixed   False on no errors or error code on error
-    * @access   private
     */
     function _chk_dir_dest ($dir_dest)
     {
@@ -499,7 +491,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     *                       all the properties will be returned
     * @return mixed         A string or array
     * @see HTTP_Upload_File::HTTP_Upload_File()
-    * @access public    
+    * @access public
     */
     function getProp ($name=null)
     {
@@ -512,7 +504,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
     * Returns a error message, if a error occured
     * @return string    a Error message
-    * @access public    
+    * @access public
     */
     function errorMsg()
     {

@@ -593,7 +593,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return   mixed   True on success or Pear_Error object on error
      * @access public
      */
-    function moveTo($dir_dest, $overwrite=true)
+    function moveTo($dir_dest, $overwrite = TRUE)
     {
         if (!$this->isValid()) {
             return $this->raiseError($this->upload['error']);
@@ -605,7 +605,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         }
 
         $err_code = $this->_chk_dir_dest($dir_dest);
-        if ($err_code !== false) {
+        if ($err_code !== FALSE) {
             return $this->raiseError($err_code);
         }
         // Use 'safe' mode by default if no other was selected
@@ -616,14 +616,15 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         $name_dest = $dir_dest . DIRECTORY_SEPARATOR . $this->upload['name'];
 
         if (@is_file($name_dest)) {
-            if ($overwrite !== true) {
+            if ($overwrite !== TRUE) {
                 return $this->raiseError('FILE_EXISTS');
             } elseif (!is_writable($name_dest)) {
                 return $this->raiseError('CANNOT_OVERWRITE');
             }
         }
-        // Copy the file and let php clean the tmp
-        if (!@copy($this->upload['tmp_name'], $name_dest)) {
+
+        // copy the file and let php clean the tmp
+        if (!move_uploaded_file($this->upload['tmp_name'], $name_dest)) {
             return $this->raiseError('E_FAIL_MOVE');
         }
         @chmod($name_dest, 0660);

@@ -518,23 +518,39 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         return $this->errorCode($this->upload['error']);
     }
 
+    /**
+    * Function to restrict the valid extensions on file uploads
+    *
+    * @param array $exts File extensions to validate
+    * @param string $mode The type of validation:
+    *                       1) 'deny'   Will deny only the supplied extensions
+    *                       2) 'accept' Will accept only the supplied extensions
+    *                                   as valid
+    * @access public
+    */
     function setValidExtensions($exts, $mode = 'deny')
     {
         $this->_extensions_check = $exts;
         $this->_extensions_mode  = $mode;
     }
 
+    /**
+    * Evaluates the validity of the extensions set by setValidExtensions
+    *
+    * @return bool False on non valid extension, true if they are valid
+    * @access private
+    */
     function _evalValidExtensions()
     {
         $exts = $this->_extensions_check;
         settype($exts, 'array');
         if ($this->_extensions_mode == 'deny') {
-            if (in_array($exts, $this->getProp('ext'))) {
+            if (in_array($this->getProp('ext'), $exts)) {
                 return false;
             }
         // mode == 'accept'
         } else {
-            if (!in_array($exts, $this->getProp('ext'))) {
+            if (!in_array($this->getProp('ext'), $exts)) {
                 return false;
             }
         }

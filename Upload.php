@@ -9,7 +9,7 @@
 //
 // $Id$
 
-/**
+/*
 * Pear File Uploader class. Easy and secure managment of files
 * submitted via HTML Forms.
 *
@@ -26,17 +26,28 @@
 
 require_once 'PEAR.php';
 
+/**
+* Error Class for HTTP_Upload
+*
+* @author Tomas V.V.Cox <cox@vulcanonet.com>
+* @package HTTP
+* @access public
+*/
 class HTTP_Upload_Error extends PEAR
 {
     /**
     * Selected language for error messages
+    * @var string
     */
     var $lang = 'en';
 
     /**
     * Constructor
     *
+    * Creates a new PEAR_Error
+    *
     * @param string $lang The language selected for error code messages
+    * @access public
     */
     function HTTP_Upload_Error($lang = null)
     {
@@ -51,43 +62,59 @@ class HTTP_Upload_Error extends PEAR
         $this->error_codes = array(
             'TOO_LARGE' => array(
                 'es' => "Fichero demasiado largo. El maximo permitido es: $maxsize bytes",
-                'en' => "Too long file size. The maximun permited size is: $maxsize bytes"
+                'en' => "Too long file size. The maximun permited size is: $maxsize bytes",
+                'de' => "Datei zu groß. Die zulässige Maximalgröße ist: $maxsize bytes"
                 ),
             'MISSING_DIR' => array(
                 'es' => 'Falta directorio destino',
-                'en' => 'Missing destination directory'
+                'en' => 'Missing destination directory',
+                'de' => 'Kein Zielverzeichniss definiert'
                 ),
             'IS_NOT_DIR' => array(
                 'es' => 'El directorio destino no existe o es un fichero regular',
-                'en' => 'The destination directory doesn\'t exist or is a regular file'
+                'en' => 'The destination directory doesn\'t exist or is a regular file',
+                'de' => 'Das angebene Zielverzeichniss existiert nicht oder ist eine Datei'
                 ),
             'NO_WRITE_PERMS' => array(
                 'es' => 'El directorio destino no tiene permisos de escritura',
-                'en' => 'The destination directory doesn\'t have write perms'
+                'en' => 'The destination directory doesn\'t have write perms',
+                'de' => 'Fehlende Schreibrechte für das Zielverzeichniss'
                 ),
             'NO_USER_FILE' => array(
                 'es' => 'No se ha escogido fichero para el upload',
-                'en' => 'You haven\'t selected any file for uploading'
+                'en' => 'You haven\'t selected any file for uploading',
+                'de' => 'Es wurde keine Datei für den Upload ausgewählt'
                 ),
             'BAD_FORM' => array(
                 'es' => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido',
-                'en' => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data"'
+                'en' => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data"',
+                'de' => 'Das HTML-Formular enthält nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data"
+                         im &gt;action&lt;-Tag'
                 ),
             'E_FAIL_COPY' => array(
                 'es' => 'Fallo al copiar el fichero temporal',
-                'en' => 'Fail to copy the temp file'
+                'en' => 'Fail to copy the temp file',
+                'de' => 'Temporäre Datei konnte nicht kopiert werden'
                 ),
             'FILE_EXISTS' => array(
                 'es' => 'El fichero destino ya existe',
-                'en' => 'The destination file yet exists'
+                'en' => 'The destination file yet exists',
+                'de' => 'Die zu erzeugende Datei existiert bereits'
                 ),
             'CANNOT_OVERWRITE' => array(
                 'es' => 'El fichero destino ya existe y no se puede sobreescribir',
-                'en' => 'The destination file yet exists and could not be overwritten'
+                'en' => 'The destination file yet exists and could not be overwritten',
+                'de' => 'Die zu erzeugende Datei existiert bereits und konnte nicht überschrieben werden'
                 )
         );
     }
-
+    /**
+    * returns the error code
+    *
+    * @param    string $e_code  type of error
+    * @return   string          Error message
+    * @access   public
+    */
     function errorCode($e_code)
     {
         if (isset($this->lang) &&
@@ -100,20 +127,41 @@ class HTTP_Upload_Error extends PEAR
         return 'Upload Error: '. $msg;
     }
 
+    /**
+    * Overwrites the PEAR::raiseError method
+    *
+    * @param    string $e_code      type of error
+    * @return   object PEAR_Error   a PEAR-Error object
+    * @access   public
+    */
     function raiseError($e_code)
     {
         return PEAR::raiseError($this->errorCode($e_code));
     }
 }
 
+/**
+* This class provides an advanced file uploader system 
+* for file uploads made from html forms
+*
+* @author   Tomas V.V.Cox <cox@vulcanonet.com>
+* @package  HTTP
+* @access   public
+*/
 class HTTP_Upload extends HTTP_Upload_Error
 {
+    /**
+    * Contains the files
+    * @var array
+    */
     var $files = array();
 
     /**
     * Constructor
+    *
     * @param string $lang Language to use for reporting errors
     * @see Upload_Error::error_codes
+    * @access public
     */
     function HTTP_Upload($lang = null)
     {
@@ -135,6 +183,7 @@ class HTTP_Upload extends HTTP_Upload_Error
     *        to get this file use: $upload->getFiles('userfile')
     *
     * @return mixed array or object (see @param $file above) or Pear_Error
+    * @access public
     */
     function &getFiles($file = null)
     {
@@ -163,6 +212,11 @@ class HTTP_Upload extends HTTP_Upload_Error
         return $this->files;
     }
 
+    /**
+    * Creates the list of the uploaded file
+    *
+    * @return array of HTTP_Upload_File objects for every file
+    */
     function &_buildFiles()
     {
         // Form method check
@@ -199,8 +253,18 @@ class HTTP_Upload extends HTTP_Upload_Error
     }
 }
 
+/**
+* This class provides functions to work with the uploaded file
+*
+* @author   Tomas V.V.Cox <cox@vulcanonet.com>
+* @package  HTTP
+* @access   public
+*/
 class HTTP_Upload_File extends HTTP_Upload_Error
 {
+    /**
+    * ???
+    * @var  boolean ;
     var $_seeded = 0;
 
     /**
@@ -208,12 +272,24 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @var array
     */
     var $upload = array();
+    
     /**
     * If user haven't selected a mode, by default 'safe' will be used
-    * @var bool
+    * @var boolean
     */
     var $mode_name_selected = false;
 
+    /**
+    * Constructor
+    *
+    * @param    string  $name       destination file name
+    * @param    string  $tmp        temp file name
+    * @param    string  $formname   name of the form
+    * @param    string  $type       Mime type of the file
+    * @param    string  $size       size of the file
+    * @param    string  $lang       used language for errormessages
+    * @access   public
+    */
     function HTTP_Upload_File ($name=null, $tmp=null,  $formname=null,
                                $type=null, $size=null, $lang=null)
     {
@@ -246,9 +322,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
     * Sets the name of the destination file
     *
-    * @param string $mode A valid mode: 'uniq', 'safe' or 'real' or a file name
-    * @param string $prepend A string to prepend to the name
-    * @param string $append A string to append to the name
+    * @param string $mode       A valid mode: 'uniq', 'safe' or 'real' or a file name
+    * @param string $prepend    A string to prepend to the name
+    * @param string $append     A string to append to the name
     *
     * @return string The modified name of the destination file
     */
@@ -271,8 +347,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         $this->mode_name_selected = true;
         return $this->upload['name'];
     }
+
     /**
     * Unique file names in the form: 9022210413b75410c28bef.html
+    * @access public    
     */
     function nameToUniq ()
     {
@@ -288,9 +366,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
     * Format a file name to be safe
     *
-    * @param string $file  - The string file name
-    * @param int $maxlen - Maximun permited string lenght
-    * @result string - Formatted file name
+    * @param    string $file   The string file name
+    * @param    int    $maxlen Maximun permited string lenght
+    * @return   string Formatted file name
+    * @access public    
     */
     function nameToSafe ($name, $maxlen=250)
     {
@@ -301,9 +380,12 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         // not permitted chars are replaced with "_"
         return ereg_replace ('[^a-zA-Z0-9,._\+\()\-]', '_', $name);
     }
+    
     /**
     * The upload was valid
+    *
     * @return bool If the file was submitted correctly
+    * @access public    
     */
     function isValid()
     {
@@ -312,9 +394,12 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         }
         return false;
     }
+    
     /**
     * User haven't submit a file
+    *
     * @return bool If the user submitted a file or not
+    * @access public    
     */
     function isMissing()
     {
@@ -323,11 +408,13 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         }
         return false;
     }
+    
     /**
     * Some error occured during upload (most common due a file size problem,
     * like max size exceeded or 0 bytes long).
     * @return bool If there were errors submitting the file (probably
     *              because the file excess the max permitted file size)
+    * @access public    
     */
     function isError()
     {
@@ -338,12 +425,16 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
+    * It copies the raised file number $filepos, to the directory $dir_dest with 
+    * name $name_dest. ( Thanks to babelfish)
+    *
     * Copia el fichero subido numero $filepos, al directorio $dir_dest
     * con nombre $name_dest.
     *
-    * @param string $dir_dest
-    * @param bool $overwrite
-    * @return mixed True on success or Pear_Error object on error
+    * @param    string  $dir_dest
+    * @param    bool    $overwrite
+    * @return   mixed   True on success or Pear_Error object on error
+    * @access public
     */
     function moveTo ($dir_dest, $overwrite=true)
     {
@@ -385,9 +476,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
     * Check for a valid destination dir
     *
-    * @param string $dir_dest Destination dir
-    * @return mixed False on no errors or error code on error
-    * @access private
+    * @param    string  $dir_dest Destination dir
+    * @return   mixed   False on no errors or error code on error
+    * @access   private
     */
     function _chk_dir_dest ($dir_dest)
     {
@@ -404,10 +495,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
     /**
     * Retrive properties of the uploaded file
-    * @param string $name The property name. When null an assoc array with
-    *                     all the properties will be returned
-    * @return mixed A string or array
+    * @param string $name   The property name. When null an assoc array with
+    *                       all the properties will be returned
+    * @return mixed         A string or array
     * @see HTTP_Upload_File::HTTP_Upload_File()
+    * @access public    
     */
     function getProp ($name=null)
     {
@@ -417,6 +509,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         return $this->upload[$name];
     }
 
+    /**
+    * Returns a error message, if a error occured
+    * @return string    a Error message
+    * @access public    
+    */
     function errorMsg()
     {
         return $this->errorCode($this->upload['error']);

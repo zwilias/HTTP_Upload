@@ -14,7 +14,7 @@ from html forms. Features:
  * Gives extensive information about the uploaded file.
  * Rename uploaded files in different ways: as it is, safe or unique
  * Validate allowed file extensions
- * Multiple languages error messages support (es, en, de, fr, nl)
+ * Multiple languages error messages support (es, en, de, fr, it, nl, pt_BR)
   </description>
   <maintainers>
     <maintainer>
@@ -23,21 +23,45 @@ from html forms. Features:
       <email>cox@idecnet.com</email>
       <role>lead</role>
     </maintainer>
+    <maintainer>
+      <user>wenz</user>
+      <name>Christian Wenz</name>
+      <email>wenz@php.net</email>
+      <role>lead</role>
+    </maintainer>
+    <maintainer>
+      <user>antonio</user>
+      <name>Antônio Carlos Venâncio Júnior</name>
+      <email>antonio@php.net</email>
+      <role>lead</role>
+    </maintainer>
   </maintainers>
 
   <release>
     <license>LGPL</license>
-    <version>0.8</version>
-    <date>2002-01-25</date>
-    <state>stable</state>
+    <version>0.9.0</version>
+    <date>2004-06-24</date>
+    <state>beta</state>
     <notes>
-- Fixed compatibility issues with PHP > 4.1
-- Added isMissing() to the upload main object. Use this first
-  to check if the user has submitted a file (for PHP > 4.1 users)
-- Depreciate the use of errorMsg() in the file object. Use
-  getMessage() instead.
-- Added NL and FR translations (thanks Hans and Luc!)
-  (full backawards compatibility preserved)
+- (antonio) Added PHP > 4.2 support
+- (antonio) Fixed a lot of bugs
+- (cox) Error detection was enhanced, so you no longer need to
+  check for PEAR::isError() in $upload->getFiles() or call
+  $upload->isMissing(). Instead you'll
+  get the error when do a check for $file->isError().
+
+  Example:
+
+   $upload = new HTTP_Upload('en');
+   $file = $upload->getFiles('i_dont_exist_in_form_definition');
+   if ($file->isError()) {
+      die($file->getMessage());
+   }
+
+TODO:
+
+- Move error class to a new file
+- As PEAR in general requires now PHP 4.2, drop BC compat
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="HTTP">
@@ -48,30 +72,4 @@ from html forms. Features:
       </dir>
     </filelist>
   </release>
-
-  <changelog>
-    <release>
-      <version>0.7</version>
-      <date>2001-12-27</date>
-      <state>stable</state>
-      <notes>
-- Added file extension checking support. Now by default  rejects this extensions: 'php', 'phtm',
-  'phtml', 'php3', 'inc'
-- More in-line documentation and error code tranlations in spanish, english and
-  german
-- Other minor fixes
-        </notes>
-    </release>
-  <release>
-      <version>0.6.4</version>
-      <date>2001-08-15</date>
-      <notes>
-- more safe checks
-- the default file name mode is now 'safe'
-- phpdoc update
-Please use this version if you are using the class
-    </notes>
-    </release>
-</changelog>
-
 </package>

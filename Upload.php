@@ -59,38 +59,38 @@ class HTTP_Upload_Error extends PEAR
             'TOO_LARGE' => array(
                 'es' => "Fichero demasiado largo. El maximo permitido es: $maxsize bytes",
                 'en' => "File size too large. The maximum permitted size is: $maxsize bytes",
-                'de' => "Datei zu groß. Die zulässige Maximalgröße ist: $maxsize bytes"
+                'de' => "Datei zu gro&szlig;. Die zul&auml;ssige Maximalgr&ouml;&szlig;e ist: $maxsize bytes"
                 ),
             'MISSING_DIR' => array(
                 'es' => 'Falta directorio destino',
                 'en' => 'Missing destination directory',
-                'de' => 'Kein Zielverzeichniss definiert'
+                'de' => 'Kein Zielverzeichnis definiert'
                 ),
             'IS_NOT_DIR' => array(
                 'es' => 'El directorio destino no existe o es un fichero regular',
                 'en' => 'The destination directory doesn\'t exist or is a regular file',
-                'de' => 'Das angebene Zielverzeichniss existiert nicht oder ist eine Datei'
+                'de' => 'Das angebene Zielverzeichnis existiert nicht oder ist eine Datei'
                 ),
             'NO_WRITE_PERMS' => array(
                 'es' => 'El directorio destino no tiene permisos de escritura',
                 'en' => 'The destination directory doesn\'t have write perms',
-                'de' => 'Fehlende Schreibrechte für das Zielverzeichniss'
+                'de' => 'Fehlende Schreibrechte f&uuml;r das Zielverzeichnis'
                 ),
             'NO_USER_FILE' => array(
                 'es' => 'No se ha escogido fichero para el upload',
                 'en' => 'You haven\'t selected any file for uploading',
-                'de' => 'Es wurde keine Datei für den Upload ausgewählt'
+                'de' => 'Es wurde keine Datei für den Upload ausgew&auml;hlt'
                 ),
             'BAD_FORM' => array(
                 'es' => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido',
                 'en' => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data"',
-                'de' => 'Das HTML-Formular enthält nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data" '.
+                'de' => 'Das HTML-Formular enth&auml;lt nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data" '.
                         'im &gt;form&lt;-Tag'
                 ),
             'E_FAIL_COPY' => array(
                 'es' => 'Fallo al copiar el fichero temporal',
                 'en' => 'Failed to copy the temporary file',
-                'de' => 'Temporäre Datei konnte nicht kopiert werden'
+                'de' => 'Tempor&auml;re Datei konnte nicht kopiert werden'
                 ),
             'FILE_EXISTS' => array(
                 'es' => 'El fichero destino ya existe',
@@ -100,7 +100,7 @@ class HTTP_Upload_Error extends PEAR
             'CANNOT_OVERWRITE' => array(
                 'es' => 'El fichero destino ya existe y no se puede sobreescribir',
                 'en' => 'The destination file already exists and could not be overwritten',
-                'de' => 'Die zu erzeugende Datei existiert bereits und konnte nicht überschrieben werden'
+                'de' => 'Die zu erzeugende Datei existiert bereits und konnte nicht &uuml;berschrieben werden'
                 )
         );
     }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- do not use the "Type" attribute here, that one is only for
+     generated package.xml files -->
+<Package>
+  <Name>HTTP_Uploader</Name>
+  <Summary>Easy and secure managment of files submitted via HTML Forms</Summary>
+  <Maintainer>
+    <Initials>cox</Initials>
+    <Name>Tomas V.V.Cox</Name>
+    <Email>cox@php.net</Email>
+  </Maintainer>
+
+  <Release>
+    <Version>0.6.2</Version>
+    <Date>2001-08-11</Date>
+    <Notes>
+      This is the initial release of the package in the pear repo.
+    </Notes>
+  </Release>
+
+  <FileList>
+    <Dir Name="/" BaseInstallDir="HTTP">
+        <File Role="php">Upload.php</File>
+        <Dir Name="docs" Role="doc">
+            <File>upload_example.php</File>
+        </Dir>
+    </Dir>
+  </FileList>
+</Package>

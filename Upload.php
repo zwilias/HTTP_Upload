@@ -176,7 +176,7 @@ class HTTP_Upload extends HTTP_Upload_Error
         foreach ($this->post_files as $userfile => $value) {
             if (is_array($value['name'])) {
                 foreach ($value['name'] as $key => $val) {
-                    $name = $value['name'][$key];
+                    $name = basename($value['name'][$key]);
                     $tmp_name = $value['tmp_name'][$key];
                     $size = $value['size'][$key];
                     $type = $value['type'][$key];
@@ -186,7 +186,7 @@ class HTTP_Upload extends HTTP_Upload_Error
                 }
             // One file
             } else {
-                $name = $value['name'];
+                $name = basename($value['name']);
                 $tmp_name = $value['tmp_name'];
                 $size = $value['size'];
                 $type = $value['type'];
@@ -203,8 +203,14 @@ class HTTP_Upload_File extends HTTP_Upload_Error
 {
     /**
     * Assoc array with file properties
+    * @var array
     */
     var $upload = array();
+    /**
+    * If user haven't selected a mode, by default 'safe' will be used
+    * @var bool
+    */
+    var $mode_name_selected = false;
 
     function HTTP_Upload_File ($name=null, $tmp=null,  $formname=null,
                                $type=null, $size=null, $lang=null)
@@ -260,6 +266,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
                 $name = $mode;
         }
         $this->upload['name'] = $prepend . $name . $append;
+        $this->mode_name_selected = true;
         return $this->upload['name'];
     }
     /**
@@ -273,25 +280,23 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Dada una cadena de texto, la formatea para que
-    * se pueda convertir en un nombre de fichero seguro
+    * Format a file name to be safe
     *
-    * @param string $file  - La cadena de texto a convertir
+    * @param string $file  - The string file name
     * @param int $maxlen - Maximun permited string lenght
-    * @result string - Cadena de texto con formato de nombre de fichero
+    * @result string - Formatted file name
     */
     function nameToSafe ($name, $maxlen=250)
     {
         $noalpha = 'áéíóúàèìòùäëïöüÁÉÍÓÚÀÈÌÒÙÄËÏÖÜâêîôûÂÊÎÔÛñçÇ@';
         $alpha =   'aeiouaeiouaeiouAEIOUAEIOUAEIOUaeiouAEIOUncCa';
-        // el largo del nombre del fichero no debe exceder los 200 cc
-        // se dejan 55 cc para poder poner extensiones y otros datos
         $name = substr ($name, 0, $maxlen);
         $name = strtr ($name, $noalpha, $alpha);
-        // si no es un caracter permitido, se substituye por "_"
-        return ereg_replace ('[^a-zA-Z0-9/,._\+\()\-]', '_', $name);
+        // not permitted chars are replaced with "_"
+        return ereg_replace ('[^a-zA-Z0-9,._\+\()\-]', '_', $name);
     }
     /**
+    * The upload was valid
     * @return bool If the file was submitted correctly
     */
     function isValid()
@@ -302,6 +307,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         return false;
     }
     /**
+    * User haven't submit a file
     * @return bool If the user submitted a file or not
     */
     function isMissing()
@@ -312,6 +318,8 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         return false;
     }
     /**
+    * Some error occured during upload (most common due a file size problem,
+    * like max size exceeded or 0 bytes long).
     * @return bool If there were errors submitting the file (probably
     *              because the file excess the max permitted file size)
     */
@@ -329,7 +337,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     *
     * @param string $dir_dest
     * @param bool $overwrite
-    * @return mixed True on success or Pear_Error object on errors
+    * @return mixed True on success or Pear_Error object on error
     */
     function moveTo ($dir_dest, $overwrite=true)
     {
@@ -343,19 +351,22 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         if ($err_code !== false) {
             return $this->raiseError($err_code);
         }
+        // Use 'safe' mode by default if no other was selected
+        if (!$this->mode_name_selected) {
+            $this->setName('safe');
+        }
         $slash = '';
         if ($dir_dest[strlen($dir_dest)-1] != '/') {
             $slash = '/';
         }
         $name_dest = $dir_dest . $slash . $this->upload['name'];
 
-        $is_file = @is_file($name_dest);
-
-        if (($overwrite !== true) && $is_file) {
-            return $this->raiseError('FILE_EXISTS');
-        }
-        if ($is_file && !is_writable($name_dest)) {
-            return $this->raiseError('CANNOT_OVERWRITE');
+        if (@is_file($name_dest)) {
+            if ($overwrite !== true) {
+                return $this->raiseError('FILE_EXISTS');
+            } elseif (!is_writable($name_dest)) {
+                return $this->raiseError('CANNOT_OVERWRITE');
+            }
         }
         // Copy the file and let php clean the tmp
         if (!@copy ($this->upload['tmp_name'], $name_dest)) {

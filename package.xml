@@ -13,26 +13,41 @@
 
   <release>
     <license>LGPL</license>
-    <version>0.7</version>
-    <date>2001-12-27</date>
+    <version>0.8</version>
+    <date>2002-1-25</date>
     <state>stable</state>
     <notes>
-- Added file extension checking support. Now by default  rejects this extensions: 'php', 'phtm',
-    'phtml', 'php3', 'inc'
-- More in-line documentation and error code tranlations in spanish, english and german
-- Other minor fixes
+- Fixed compatibility issues with PHP > 4.1
+- Added isMissing() to the upload main object. Use this first
+  to check if the user has submitted a file (for PHP > 4.1 users)
+- Depreciate the use of errorMsg() in the file object. Use
+  getMessage() instead.
+- Added NL and FR translations (thanks Hans and Luc!)
+(full backawards compatibility preserved)
     </notes>
-    <filelist>
-    <dir name="/" baseinstalldir="HTTP">
-        <file role="php">Upload.php</file>
-        <dir name="docs" role="doc">
-            <file>upload_example.php</file>
+        <filelist>
+        <dir name="/" baseinstalldir="HTTP">
+            <file role="php">Upload.php</file>
+            <dir name="docs" role="doc">
+                <file>upload_example.php</file>
+            </dir>
         </dir>
-    </dir>
-  </filelist>
+      </filelist>
   </release>
 
 <changelog>
+    <release>
+        <version>0.7</version>
+        <date>2001-12-27</date>
+        <state>stable</state>
+        <notes>
+    - Added file extension checking support. Now by default  rejects this extensions: 'php', 'phtm',
+        'phtml', 'php3', 'inc'
+    - More in-line documentation and error code tranlations in spanish, english and
+    german
+    - Other minor fixes
+        </notes>
+  </release>
   <release>
     <version>0.6.4</version>
     <date>2001-08-15</date>

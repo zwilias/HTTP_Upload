@@ -24,6 +24,23 @@
 *   (the new error entry in HTTP_POST_FILES)
 * - try to think a way of having all the Error system in other
 *   file and only include it when an error ocurrs
+*
+* -- Note for users of PHP > 4.1 --
+*
+* Due the fact that PHP now doen't register the HTTP_POST_FILES if no
+* uploads are done, the class is not able to give verbose information
+* about what happens. To check that you have to use the new isMissing()
+* method avaible from the $upload object too. For ex:
+*
+* $upload = new HTTP_Upload('en');
+* $missing = $upload->isMissing();
+* if (!$missing) {
+*    <code for manage files>
+* } else {
+*    die ($missing->getMessage());
+* }
+*
+* -- Notes --
 */
 
 require_once 'PEAR.php';
@@ -248,9 +265,15 @@ class HTTP_Upload extends HTTP_Upload_Error
     function &_buildFiles()
     {
         // Form method check
-        if (empty($this->post_files) ||
-            !ereg('multipart/form-data', $this->content_type)) {
+        if (!ereg('^multipart/form-data', $this->content_type)) {
                 return $this->raiseError('BAD_FORM');
+        }
+        // In 4.1 HTTP_POST_FILES isn't initialized when no uploads
+        if (function_exists('version_compare') && version_compare(phpversion(), '4.1', 'ge')) {
+            $error = $this->isMissing();
+            if (PEAR::isError($error)) {
+                return $error;
+            }
         }
 
         // Parse $HTTP_POST_FILES
@@ -278,6 +301,22 @@ class HTTP_Upload extends HTTP_Upload_Error
             }
         }
         return $files;
+    }
+
+    /**
+    * Checks if the user submited or not some file
+    *
+    * @return mixed False when are files or PEAR_Error when no files
+    * @access public
+    * @see Read the note in the source code about this function
+    */
+    function isMissing()
+    {
+        if (empty($this->post_files) || count($this->post_files) < 1) {
+            return $this->raiseError('NO_USER_FILE');
+        }
+        return false;
+
     }
 }
 
@@ -351,6 +390,15 @@ class HTTP_Upload_File extends HTTP_Upload_Error
             if (($pos = strrpos($name, '.')) !== false) {
                 $ext = substr ($name, $pos + 1);
             }
+        }
+
+        global $HTTP_POST_VARS;
+        // Seems that PHP 4.1.1 doesn't handle the MAX_FILE_SIZE correctly
+        // or I didn't find the new way
+        if (isset($HTTP_POST_VARS['MAX_FILE_SIZE']) &&
+            $size > $HTTP_POST_VARS['MAX_FILE_SIZE'])
+        {
+            $error = 'TOO_LARGE';
         }
 
         $this->upload = array(
@@ -559,10 +607,21 @@ class HTTP_Upload_File extends HTTP_Upload_Error
 
     /**
     * Returns a error message, if a error occured
+    * (deprecated) Use getMessage() instead
     * @return string    a Error message
     * @access public
     */
     function errorMsg()
+    {
+        return $this->errorCode($this->upload['error']);
+    }
+
+    /**
+    * Returns a error message, if a error occured
+    * @return string    a Error message
+    * @access public
+    */
+    function getMessage()
     {
         return $this->errorCode($this->upload['error']);
     }

@@ -10,64 +10,68 @@
 // $Id$
 
 /*
-* Pear File Uploader class. Easy and secure managment of files
-* submitted via HTML Forms.
-*
-* @see http://vulcanonet.com/soft/index.php?pack=uploader
-* @author Tomas V.V.Cox <cox@vulcanonet.com>
-*
-* Leyend:
-* - you can add error msgs in your language in the HTTP_Upload_Error class
-*
-* TODO:
-* - addapt the class to new upload features of the 4.2 (?) release
-*   (the new error entry in HTTP_POST_FILES)
-* - try to think a way of having all the Error system in other
-*   file and only include it when an error ocurrs
-*
-* -- Note for users of PHP > 4.1 --
-*
-* Due the fact that PHP now doesn't register the HTTP_POST_FILES if no
-* uploads are done, the class is not able to give verbose information
-* about what happens. To check that you have to use the new isMissing()
-* method avaible from the $upload object too. For ex:
-*
-* $upload = new HTTP_Upload('en');
-* $missing = $upload->isMissing();
-* if (!$missing) {
-*    <code for manage files>
-* } else {
-*    die ($missing->getMessage());
-* }
-*
-* -- Notes --
-*/
+ * Pear File Uploader class. Easy and secure managment of files
+ * submitted via HTML Forms.
+ *
+ * @see http://vulcanonet.com/soft/index.php?pack=uploader
+ * @author Tomas V.V.Cox <cox@vulcanonet.com>
+ *
+ * Leyend:
+ * - you can add error msgs in your language in the HTTP_Upload_Error class
+ *
+ * TODO:
+ * - addapt the class to new upload features of the 4.2 (?) release
+ *   (the new error entry in HTTP_POST_FILES)
+ * - try to think a way of having all the Error system in other
+ *   file and only include it when an error ocurrs
+ *
+ * -- Note for users of PHP > 4.1 --
+ *
+ * Due the fact that PHP now doesn't register the HTTP_POST_FILES if no
+ * uploads are done, the class is not able to give verbose information
+ * about what happens. To check that you have to use the new isMissing()
+ * method avaible from the $upload object too. For ex:
+ *
+ * $upload = new HTTP_Upload('en');
+ * $missing = $upload->isMissing();
+ * if (!$missing) {
+ *    <code for manage files>
+ * } else {
+ *    die ($missing->getMessage());
+ * }
+ *
+ * -- Notes --
+ *
+ * @package  HTTP_Upload
+ * @category HTTP
+ */
 
 require_once 'PEAR.php';
 
 /**
-* Error Class for HTTP_Upload
-*
-* @author Tomas V.V.Cox <cox@vulcanonet.com>
-* @package HTTP
-* @access public
-*/
+ * Error Class for HTTP_Upload
+ *
+ * @author  Tomas V.V.Cox <cox@vulcanonet.com>
+ * @package HTTP_Upload
+ * @category HTTP
+ * @access public
+ */
 class HTTP_Upload_Error extends PEAR
 {
     /**
-    * Selected language for error messages
-    * @var string
-    */
+     * Selected language for error messages
+     * @var string
+     */
     var $lang = 'en';
 
     /**
-    * Constructor
-    *
-    * Creates a new PEAR_Error
-    *
-    * @param string $lang The language selected for error code messages
-    * @access public
-    */
+     * Constructor
+     *
+     * Creates a new PEAR_Error
+     *
+     * @param string $lang The language selected for error code messages
+     * @access public
+     */
     function HTTP_Upload_Error($lang = null)
     {
         $this->lang = ($lang !== null) ? $lang : $this->lang;
@@ -139,6 +143,11 @@ class HTTP_Upload_Error extends PEAR
                 'fr' => 'L\'enregistrement du fichier temporaire a échou&eacute;',
                 'it' => 'Copia del file temporaneo fallita'
                 ),
+            'E_FAIL_MOVE' => array(
+                'es' => 'No puedo mover el fichero',
+                'en' => 'Impossible to move the file',
+                'fr' => 'Impossible de d&eacute;placer le fichier',
+                ),
             'FILE_EXISTS' => array(
                 'es' => 'El fichero destino ya existe',
                 'en' => 'The destination file already exists',
@@ -157,7 +166,7 @@ class HTTP_Upload_Error extends PEAR
                 ),
             'NOT_ALLOWED_EXTENSION' => array(
                 'es' => 'Extension de fichero no permitida',
-                'en' => 'Not permitted file extension',
+                'en' => 'File extension not permitted',
                 'de' => 'Unerlaubte Dateiendung',
                 'nl' => 'Niet toegestane bestands-extensie.',
                 'fr' => 'Le fichier a une extension non autoris&eacute;e.',
@@ -165,12 +174,13 @@ class HTTP_Upload_Error extends PEAR
                 )
         );
     }
+
     /**
-    * returns the error code
-    *
-    * @param    string $e_code  type of error
-    * @return   string          Error message
-    */
+     * returns the error code
+     *
+     * @param    string $e_code  type of error
+     * @return   string          Error message
+     */
     function errorCode($e_code)
     {
         if (isset($this->lang) &&
@@ -184,12 +194,12 @@ class HTTP_Upload_Error extends PEAR
     }
 
     /**
-    * Overwrites the PEAR::raiseError method
-    *
-    * @param    string $e_code      type of error
-    * @return   object PEAR_Error   a PEAR-Error object
-    * @access   public
-    */
+     * Overwrites the PEAR::raiseError method
+     *
+     * @param    string $e_code      type of error
+     * @return   object PEAR_Error   a PEAR-Error object
+     * @access   public
+     */
     function raiseError($e_code)
     {
         return PEAR::raiseError($this->errorCode($e_code), $e_code);
@@ -197,28 +207,29 @@ class HTTP_Upload_Error extends PEAR
 }
 
 /**
-* This class provides an advanced file uploader system
-* for file uploads made from html forms
-*
-* @author   Tomas V.V.Cox <cox@vulcanonet.com>
-* @package  HTTP
-* @access   public
-*/
+ * This class provides an advanced file uploader system
+ * for file uploads made from html forms
+ *
+ * @author   Tomas V.V.Cox <cox@vulcanonet.com>
+ * @package  HTTP_Upload
+ * @category HTTP
+ * @access   public
+ */
 class HTTP_Upload extends HTTP_Upload_Error
 {
     /**
-    * Contains an array of "uploaded files" objects
-    * @var array
-    */
+     * Contains an array of "uploaded files" objects
+     * @var array
+     */
     var $files = array();
 
     /**
-    * Constructor
-    *
-    * @param string $lang Language to use for reporting errors
-    * @see Upload_Error::error_codes
-    * @access public
-    */
+     * Constructor
+     *
+     * @param string $lang Language to use for reporting errors
+     * @see Upload_Error::error_codes
+     * @access public
+     */
     function HTTP_Upload($lang = null)
     {
         $this->HTTP_Upload_Error($lang);
@@ -228,19 +239,19 @@ class HTTP_Upload extends HTTP_Upload_Error
     }
 
     /**
-    * Get files
-    *
-    * @param mixed $file If:
-    *    - not given, function will return array of upload_file objects
-    *    - is int, will return the $file position in upload_file objects array
-    *    - is string, will return the upload_file object corresponding
-    *        to $file name of the form. For ex:
-    *        if form is <input type="file" name="userfile">
-    *        to get this file use: $upload->getFiles('userfile')
-    *
-    * @return mixed array or object (see @param $file above) or Pear_Error
-    * @access public
-    */
+     * Get files
+     *
+     * @param mixed $file If:
+     *    - not given, function will return array of upload_file objects
+     *    - is int, will return the $file position in upload_file objects array
+     *    - is string, will return the upload_file object corresponding
+     *        to $file name of the form. For ex:
+     *        if form is <input type="file" name="userfile">
+     *        to get this file use: $upload->getFiles('userfile')
+     *
+     * @return mixed array or object (see @param $file above) or Pear_Error
+     * @access public
+     */
     function &getFiles($file = null)
     {
         //build only once for multiple calls
@@ -269,10 +280,10 @@ class HTTP_Upload extends HTTP_Upload_Error
     }
 
     /**
-    * Creates the list of the uploaded file
-    *
-    * @return array of HTTP_Upload_File objects for every file
-    */
+     * Creates the list of the uploaded file
+     *
+     * @return array of HTTP_Upload_File objects for every file
+     */
     function &_buildFiles()
     {
         // Form method check
@@ -315,12 +326,12 @@ class HTTP_Upload extends HTTP_Upload_Error
     }
 
     /**
-    * Checks if the user submited or not some file
-    *
-    * @return mixed False when are files or PEAR_Error when no files
-    * @access public
-    * @see Read the note in the source code about this function
-    */
+     * Checks if the user submited or not some file
+     *
+     * @return mixed False when are files or PEAR_Error when no files
+     * @access public
+     * @see Read the note in the source code about this function
+     */
     function isMissing()
     {
         if (empty($this->post_files) || count($this->post_files) < 1) {
@@ -332,60 +343,61 @@ class HTTP_Upload extends HTTP_Upload_Error
 }
 
 /**
-* This class provides functions to work with the uploaded file
-*
-* @author   Tomas V.V.Cox <cox@vulcanonet.com>
-* @package  HTTP
-* @access   public
-*/
+ * This class provides functions to work with the uploaded file
+ *
+ * @author   Tomas V.V.Cox <cox@vulcanonet.com>
+ * @package  HTTP_Upload
+ * @category HTTP
+ * @access   public
+ */
 class HTTP_Upload_File extends HTTP_Upload_Error
 {
     /**
-    * If the random seed was initialized before or not
-    * @var  boolean;
-    */
+     * If the random seed was initialized before or not
+     * @var  boolean;
+     */
     var $_seeded = 0;
 
     /**
-    * Assoc array with file properties
-    * @var array
-    */
+     * Assoc array with file properties
+     * @var array
+     */
     var $upload = array();
 
     /**
-    * If user haven't selected a mode, by default 'safe' will be used
-    * @var boolean
-    */
+     * If user haven't selected a mode, by default 'safe' will be used
+     * @var boolean
+     */
     var $mode_name_selected = false;
 
     /**
-    * It's a common security risk in pages who has the upload dir
-    * under the document root (remember the hack of the Apache web?)
-    *
-    * @var array
-    * @access private
-    * @see HTTP_Upload_File::setValidExtensions()
-    */
+     * It's a common security risk in pages who has the upload dir
+     * under the document root (remember the hack of the Apache web?)
+     *
+     * @var array
+     * @access private
+     * @see HTTP_Upload_File::setValidExtensions()
+     */
     var $_extensions_check = array('php', 'phtm', 'phtml', 'php3', 'inc');
 
     /**
-    * @see HTTP_Upload_File::setValidExtensions()
-    * @var string
-    * @access private
-    */
+     * @see HTTP_Upload_File::setValidExtensions()
+     * @var string
+     * @access private
+     */
     var $_extensions_mode  = 'deny';
 
     /**
-    * Constructor
-    *
-    * @param   string  $name       destination file name
-    * @param   string  $tmp        temp file name
-    * @param   string  $formname   name of the form
-    * @param   string  $type       Mime type of the file
-    * @param   string  $size       size of the file
-    * @param   string  $lang       used language for errormessages
-    * @access  public
-    */
+     * Constructor
+     *
+     * @param   string  $name       destination file name
+     * @param   string  $tmp        temp file name
+     * @param   string  $formname   name of the form
+     * @param   string  $type       Mime type of the file
+     * @param   string  $size       size of the file
+     * @param   string  $lang       used language for errormessages
+     * @access  public
+     */
     function HTTP_Upload_File($name=null, $tmp=null,  $formname=null,
                                $type=null, $size=null, $lang=null)
     {
@@ -425,15 +437,15 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Sets the name of the destination file
-    *
-    * @param string $mode     A valid mode: 'uniq', 'safe' or 'real' or a file name
-    * @param string $prepend  A string to prepend to the name
-    * @param string $append   A string to append to the name
-    *
-    * @return string The modified name of the destination file
-    * @access public
-    */
+     * Sets the name of the destination file
+     *
+     * @param string $mode     A valid mode: 'uniq', 'safe' or 'real' or a file name
+     * @param string $prepend  A string to prepend to the name
+     * @param string $append   A string to append to the name
+     *
+     * @return string The modified name of the destination file
+     * @access public
+     */
     function setName($mode, $prepend=null, $append=null)
     {
         switch ($mode) {
@@ -462,9 +474,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Unique file names in the form: 9022210413b75410c28bef.html
-    * @see HTTP_Upload_File::setName()
-    */
+     * Unique file names in the form: 9022210413b75410c28bef.html
+     * @see HTTP_Upload_File::setName()
+     */
     function nameToUniq()
     {
         if (! $this->_seeded) {
@@ -476,13 +488,13 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Format a file name to be safe
-    *
-    * @param    string $file   The string file name
-    * @param    int    $maxlen Maximun permited string lenght
-    * @return   string Formatted file name
-    * @see HTTP_Upload_File::setName()
-    */
+     * Format a file name to be safe
+     *
+     * @param    string $file   The string file name
+     * @param    int    $maxlen Maximun permited string lenght
+     * @return   string Formatted file name
+     * @see HTTP_Upload_File::setName()
+     */
     function nameToSafe($name, $maxlen=250)
     {
         $noalpha = 'áéíóúàèìòùäëïöüÁÉÍÓÚÀÈÌÒÙÄËÏÖÜâêîôûÂÊÎÔÛñçÇ@';
@@ -494,11 +506,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * The upload was valid
-    *
-    * @return bool If the file was submitted correctly
-    * @access public
-    */
+     * The upload was valid
+     *
+     * @return bool If the file was submitted correctly
+     * @access public
+     */
     function isValid()
     {
         if ($this->upload['error'] === null) {
@@ -508,11 +520,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * User haven't submit a file
-    *
-    * @return bool If the user submitted a file or not
-    * @access public
-    */
+     * User haven't submit a file
+     *
+     * @return bool If the user submitted a file or not
+     * @access public
+     */
     function isMissing()
     {
         if ($this->upload['error'] == 'NO_USER_FILE') {
@@ -522,12 +534,12 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Some error occured during upload (most common due a file size problem,
-    * like max size exceeded or 0 bytes long).
-    * @return bool If there were errors submitting the file (probably
-    *              because the file excess the max permitted file size)
-    * @access public
-    */
+     * Some error occured during upload (most common due a file size problem,
+     * like max size exceeded or 0 bytes long).
+     * @return bool If there were errors submitting the file (probably
+     *              because the file excess the max permitted file size)
+     * @access public
+     */
     function isError()
     {
         if ($this->upload['error'] == 'TOO_LARGE') {
@@ -537,13 +549,13 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Moves the uploaded file to its destination directory.
-    *
-    * @param    string  $dir_dest  Destination directory
-    * @param    bool    $overwrite Overwrite if destination file exists?
-    * @return   mixed   True on success or Pear_Error object on error
-    * @access public
-    */
+     * Moves the uploaded file to its destination directory.
+     *
+     * @param    string  $dir_dest  Destination directory
+     * @param    bool    $overwrite Overwrite if destination file exists?
+     * @return   mixed   True on success or Pear_Error object on error
+     * @access public
+     */
     function moveTo($dir_dest, $overwrite=true)
     {
         if (!$this->isValid()) {
@@ -582,11 +594,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Check for a valid destination dir
-    *
-    * @param    string  $dir_dest Destination dir
-    * @return   mixed   False on no errors or error code on error
-    */
+     * Check for a valid destination dir
+     *
+     * @param    string  $dir_dest Destination dir
+     * @return   mixed   False on no errors or error code on error
+     */
     function _chk_dir_dest($dir_dest)
     {
         if (!$dir_dest) {
@@ -601,13 +613,13 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         return false;
     }
     /**
-    * Retrive properties of the uploaded file
-    * @param string $name   The property name. When null an assoc array with
-    *                       all the properties will be returned
-    * @return mixed         A string or array
-    * @see HTTP_Upload_File::HTTP_Upload_File()
-    * @access public
-    */
+     * Retrive properties of the uploaded file
+     * @param string $name   The property name. When null an assoc array with
+     *                       all the properties will be returned
+     * @return mixed         A string or array
+     * @see HTTP_Upload_File::HTTP_Upload_File()
+     * @access public
+     */
     function getProp($name=null)
     {
         if ($name === null) {
@@ -617,36 +629,36 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Returns a error message, if a error occured
-    * (deprecated) Use getMessage() instead
-    * @return string    a Error message
-    * @access public
-    */
+     * Returns a error message, if a error occured
+     * (deprecated) Use getMessage() instead
+     * @return string    a Error message
+     * @access public
+     */
     function errorMsg()
     {
         return $this->errorCode($this->upload['error']);
     }
 
     /**
-    * Returns a error message, if a error occured
-    * @return string    a Error message
-    * @access public
-    */
+     * Returns a error message, if a error occured
+     * @return string    a Error message
+     * @access public
+     */
     function getMessage()
     {
         return $this->errorCode($this->upload['error']);
     }
 
     /**
-    * Function to restrict the valid extensions on file uploads
-    *
-    * @param array $exts File extensions to validate
-    * @param string $mode The type of validation:
-    *                       1) 'deny'   Will deny only the supplied extensions
-    *                       2) 'accept' Will accept only the supplied extensions
-    *                                   as valid
-    * @access public
-    */
+     * Function to restrict the valid extensions on file uploads
+     *
+     * @param array $exts File extensions to validate
+     * @param string $mode The type of validation:
+     *                       1) 'deny'   Will deny only the supplied extensions
+     *                       2) 'accept' Will accept only the supplied extensions
+     *                                   as valid
+     * @access public
+     */
     function setValidExtensions($exts, $mode = 'deny')
     {
         $this->_extensions_check = $exts;
@@ -654,11 +666,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-    * Evaluates the validity of the extensions set by setValidExtensions
-    *
-    * @return bool False on non valid extension, true if they are valid
-    * @access private
-    */
+     * Evaluates the validity of the extensions set by setValidExtensions
+     *
+     * @return bool False on non valid extension, true if they are valid
+     * @access private
+     */
     function _evalValidExtensions()
     {
         $exts = $this->_extensions_check;

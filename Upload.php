@@ -139,9 +139,9 @@ class HTTP_Upload_Error extends PEAR
                 'pt_BR' => 'Nenhum arquivo selecionado para upload.'
                 ),
             'BAD_FORM' => array(
-                'es'    => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido.',
-                'en'    => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data".',
-                'de'    => 'Das HTML-Formular enth&auml;lt nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data" '.
+                'es'    => 'El formulario no contiene method="post" enctype="multipart/form-data" requerido.',
+                'en'    => 'The html form doesn\'t contain the required method="post" enctype="multipart/form-data".',
+                'de'    => 'Das HTML-Formular enth&auml;lt nicht die Angabe method="post" enctype="multipart/form-data" '.
                            'im &gt;form&lt;-Tag.',
                 'nl'    => 'Het HTML-formulier bevat niet de volgende benodigde '.
                            'eigenschappen: method="post" enctype="multipart/form-data".',
@@ -207,8 +207,9 @@ class HTTP_Upload_Error extends PEAR
                 'pt_BR' => 'Erro de upload:'
                 ),
             'DEV_NO_DEF_FILE' => array(
-                'es'    => 'No está definido en el formulario este nombre de fichero como &lt;form type="file" name=?&gt;',
-                'en'    => 'This is filename is not defined in the form as &lt;form type="file" name=?&gt;',
+                'es'    => 'No está definido en el formulario este nombre de fichero como &lt;input type="file" name=?&gt;.',
+                'en'    => 'This filename is not defined in the form as &lt;input type="file" name=?&gt;.',
+                'de'    => 'Dieser Dateiname ist in der Datei nicht als &lt;input type="file" name=?&gt; definiert.',
                 )
         );
     }

@@ -1,9 +1,9 @@
 <html><body>
-<form action="<?php echo $HTTP_SERVER_VARS['PHP_SELF'];?>?submit=1" method="post" enctype="multipart/form-data">
+<form action="<?php echo $_SERVER['PHP_SELF'];?>?submit=1" method="post" enctype="multipart/form-data">
    Send these files:<br>
-  <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="100000">
+  <input type="hidden" name="MAX_FILE_SIZE" value="100000">
    
-   <input name="userfile" type="file"> <-<br>
+   <input name="userfile" type="file"> &lt;-<br>
    <input name="otherfile[]" type="file"><br>
    <input name="otherfile[]" type="file"><br>
    <input type="submit" value="Send files">

@@ -20,7 +20,7 @@
  * - try to think a way of having all the Error system in other
  *   file and only include it when an error ocurrs
  *
- * -- Notes for users HTTP_Upload >= 0.9.0 --
+ * -- Notes for users HTTP_Upload >= 1.0.0 --
  *
  *  Error detection was enhanced, so you no longer need to
  *  check for PEAR::isError() in $upload->getFiles() or call
@@ -32,7 +32,7 @@
  *  $upload = new HTTP_Upload('en');
  *  $file = $upload->getFiles('i_dont_exist_in_form_definition');
  *  if ($file->isError()) {
- *     die($file->getMessage());
+ *      die($file->getMessage());
  *  }
  *
  *  --
@@ -40,6 +40,11 @@
  */
 
 require_once 'PEAR.php';
+
+/**
+ * defines default chmod
+ */
+define('HTTP_UPLOAD_DEFAULT_CHMOD', 0660);
 
 /**
  * Error Class for HTTP_Upload
@@ -212,7 +217,7 @@ class HTTP_Upload_Error extends PEAR
             'DEV_NO_DEF_FILE' => array(
                 'es'    => 'No está definido en el formulario este nombre de fichero como &lt;input type="file" name=?&gt;.',
                 'en'    => 'This filename is not defined in the form as &lt;input type="file" name=?&gt;.',
-                'de'    => 'Dieser Dateiname ist in der Datei nicht als &lt;input type="file" name=?&gt; definiert.',
+                'de'    => 'Dieser Dateiname ist im Formular nicht als &lt;input type="file" name=?&gt; definiert.',
                 'nl'    => 'Deze bestandsnaam is niett gedefineerd in het formulier als &lt;input type="file" name=?&gt;.'
                 )
         );
@@ -273,6 +278,13 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @var array
      */
     var $files = array();
+    
+    /**
+     * Contains the desired chmod for uploaded files
+     * @var int
+     * @access private
+     */
+    var $_chmod = HTTP_UPLOAD_DEFAULT_CHMOD;
 
     /**
      * Constructor
@@ -327,7 +339,7 @@ class HTTP_Upload extends HTTP_Upload_Error
                                                        '_error', null,
                                                        null, null,
                                                        null, $files->getCode(),
-                                                       $this->lang);
+                                                       $this->lang, $this->_chmod);
             } else {
                 $this->files = $files;
             }
@@ -413,7 +425,7 @@ class HTTP_Upload extends HTTP_Upload_Error
                     $type = $value['type'][$key];
                     $formname = $userfile . "[$key]";
                     $files[$formname] = new HTTP_Upload_File($name, $tmp_name,
-                                                             $formname, $type, $size, $error, $this->lang);
+                                                             $formname, $type, $size, $error, $this->lang, $this->_chmod);
                 }
                 // One file
             } else {
@@ -429,7 +441,7 @@ class HTTP_Upload extends HTTP_Upload_Error
                 $type = $value['type'];
                 $formname = $userfile;
                 $files[$formname] = new HTTP_Upload_File($name, $tmp_name,
-                                                         $formname, $type, $size, $error, $this->lang);
+                                                         $formname, $type, $size, $error, $this->lang, $this->_chmod);
             }
         }
         return $files;
@@ -463,6 +475,16 @@ class HTTP_Upload extends HTTP_Upload_Error
             $this->raiseError('NO_USER_FILE');
         }
         return false;
+    }
+
+    /**
+     * Sets the chmod to be used for uploaded files
+     *
+     * @param int Desired mode 
+     */
+    function setChmod($mode)
+    {
+        $this->_chmod = $mode;
     }
 }
 
@@ -513,6 +535,13 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     var $_extensions_mode  = 'deny';
 
     /**
+     * Contains the desired chmod for uploaded files
+     * @var int
+     * @access private
+     */
+    var $_chmod = HTTP_UPLOAD_DEFAULT_CHMOD;
+
+    /**
      * Constructor
      *
      * @param   string  $name       destination file name
@@ -525,7 +554,8 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @access  public
      */
     function HTTP_Upload_File($name = null, $tmp = null,  $formname = null,
-                              $type = null, $size = null, $error = null, $lang = null)
+                              $type = null, $size = null, $error = null, 
+                              $lang = null, $chmod = HTTP_UPLOAD_DEFAULT_CHMOD)
     {
         $this->HTTP_Upload_Error($lang);
         $ext = null;
@@ -565,6 +595,8 @@ class HTTP_Upload_File extends HTTP_Upload_Error
             'type'      => $type,
             'error'     => $error
         );
+
+        $this->_chmod = $chmod;
     }
 
     /**
@@ -722,7 +754,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         if (!@move_uploaded_file($this->upload['tmp_name'], $name_dest)) {
             return $this->raiseError('E_FAIL_MOVE');
         }
-        @chmod($name_dest, 0660);
+        @chmod($name_dest, $this->_chmod);
         return $this->getProp('name');
     }
 

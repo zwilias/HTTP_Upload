@@ -300,8 +300,8 @@ class HTTP_Upload extends HTTP_Upload_Error
     function &_buildFiles()
     {
         // Form method check
-        if (!ereg('^multipart/form-data', $this->content_type)) {
-                return $this->raiseError('BAD_FORM');
+        if (!isset($this->content_type) || !ereg('^multipart/form-data', $this->content_type)) {
+            return $this->raiseError('BAD_FORM');
         }
         // In 4.1 HTTP_POST_FILES isn't initialized when no uploads
         if (function_exists('version_compare') && version_compare(phpversion(), '4.1', 'ge')) {

@@ -2,14 +2,37 @@
 <!-- do not use the "Type" attribute here, that one is only for
      generated package.xml files -->
 <package>
-  <name>HTTP_Uploader</name>
+  <name>HTTP_Upload</name>
   <summary>Easy and secure managment of files submitted via HTML Forms</summary>
   <maintainer>
     <user>cox</user>
     <name>Tomas V.V.Cox</name>
-    <email>cox@php.net</email>
+    <email>cox@idecnet.net</email>
+    <role>lead</role>
   </maintainer>
 
+  <release>
+    <license>LGPL</license>
+    <version>0.7</version>
+    <date>2001-12-27</date>
+    <state>stable</state>
+    <notes>
+- Added file extension checking support. Now by default  rejects this extensions: 'php', 'phtm',
+    'phtml', 'php3', 'inc'
+- More in-line documentation and error code tranlations in spanish, english and german
+- Other minor fixes
+    </notes>
+    <filelist>
+    <dir name="/" baseinstalldir="HTTP">
+        <file role="php">Upload.php</file>
+        <dir name="docs" role="doc">
+            <file>upload_example.php</file>
+        </dir>
+    </dir>
+  </filelist>
+  </release>
+
+<changelog>
   <release>
     <version>0.6.4</version>
     <date>2001-08-15</date>
@@ -20,13 +43,6 @@
 Please use this version if you are using the class
     </notes>
   </release>
+</changelog>
 
-  <filelist>
-    <dir name="/" baseinstalldir="HTTP">
-        <file role="php">Upload.php</file>
-        <dir name="docs" role="doc">
-            <file>upload_example.php</file>
-        </dir>
-    </dir>
-  </filelist>
 </package>

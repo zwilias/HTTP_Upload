@@ -11,9 +11,13 @@
   </Maintainer>
 
   <Release>
-    <Version>0.6.3</Version>
-    <Date>2001-08-12</Date>
-    <Notes>Added english translations for error messages
+    <Version>0.6.4</Version>
+    <Date>2001-08-15</Date>
+    <Notes>
+- more safe checks
+- the default file name mode is now 'safe'
+- phpdoc update
+Please use this version if you are using the class
     </Notes>
   </Release>
 

@@ -5,7 +5,7 @@
   <name>HTTP_Uploader</name>
   <summary>Easy and secure managment of files submitted via HTML Forms</summary>
   <maintainer>
-    <initials>cox</initials>
+    <user>cox</user>
     <name>Tomas V.V.Cox</name>
     <email>cox@php.net</email>
   </maintainer>

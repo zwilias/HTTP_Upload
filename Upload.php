@@ -20,8 +20,10 @@
 * - you can add error msgs in your language in the HTTP_Upload_Error class
 *
 * TODO:
-* - addapt the class to new upload features of the 4.1 release
+* - addapt the class to new upload features of the 4.2 (?) release
 *   (the new error entry in HTTP_POST_FILES)
+* - try to think a way of having all the Error system in other
+*   file and only include it when an error ocurrs
 */
 
 require_once 'PEAR.php';

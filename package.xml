@@ -5,8 +5,7 @@
 <package version="1.0">
   <name>HTTP_Upload</name>
   <summary>Easy and secure managment of files submitted via HTML Forms</summary>
-  <description>
-This class provides an advanced file uploader system for file uploads made
+  <description>This class provides an advanced file uploader system for file uploads made
 from html forms. Features:
  * Can handle from one file to multiple files.
  * Safe file copying from tmp dir.
@@ -40,14 +39,16 @@ from html forms. Features:
   <release>
     <license>LGPL</license>
     <version>1.0.0</version>
-    <date>2004-07-30</date>
+    <date>2004-08-10</date>
     <state>stable</state>
-    <notes>
-- (antonio) Added support for both PHP >= 4.2 and PHP 4.1
+    <notes>**The first release in (exactly) two years!**
+
+- (antonio) Added support for both PHP >= 4.2 and PHP 4.0-4.1
 - (antonio) Fixed a lot of bugs
 - (antonio, wenz) Fixed some localization strings
 - (wenz) if only empty files are uploaded, an error message 
   is triggered 
+- (wenz) added setChmod() method to change CHMOD of uploaded files (patch by Markus Tacker) 
 - (cox, antonio, wenz) many minor fixes
 - (cox) Error detection was enhanced, so you no longer need to
   check for PEAR::isError() in $upload->getFiles() or call
@@ -69,7 +70,7 @@ TODO:
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="HTTP">
-	<file role="php" md5sum="0872867b9f0a6545464476953f737b45">Upload.php</file>
+	<file role="php" md5sum="18465ff0c2fcf659c291675cd1601e12">Upload.php</file>
 	<dir name="docs" role="doc">
 	  <file md5sum="2cb222ea90d1dbb425f170e11b9b6ca8">upload_example.php</file>
 	</dir>

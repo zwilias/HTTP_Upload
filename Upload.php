@@ -20,7 +20,7 @@
  * - try to think a way of having all the Error system in other
  *   file and only include it when an error ocurrs
  *
- * -- Notes for users HTTP_Upload >= 1.0.0 --
+ * -- Notes for users HTTP_Upload >= 0.9.0 --
  *
  *  Error detection was enhanced, so you no longer need to
  *  check for PEAR::isError() in $upload->getFiles() or call

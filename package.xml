@@ -38,10 +38,10 @@ from html forms. Features:
 
   <release>
     <license>LGPL</license>
-    <version>1.0.0</version>
+    <version>0.9.0</version>
     <date>2004-08-10</date>
     <state>stable</state>
-    <notes>**The first release in (exactly) two years!**
+    <notes>**The first release in (exactly!) two years!**
 
 - (antonio) Added support for both PHP >= 4.2 and PHP 4.0-4.1
 - (antonio) Fixed a lot of bugs
@@ -70,7 +70,7 @@ TODO:
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="HTTP">
-	<file role="php" md5sum="18465ff0c2fcf659c291675cd1601e12">Upload.php</file>
+	<file role="php" md5sum="16973767c4fcf217e0e2e36d4e2e164f">Upload.php</file>
 	<dir name="docs" role="doc">
 	  <file md5sum="2cb222ea90d1dbb425f170e11b9b6ca8">upload_example.php</file>
 	</dir>

@@ -58,7 +58,7 @@ class HTTP_Upload_Error extends PEAR
         $this->error_codes = array(
             'TOO_LARGE' => array(
                 'es' => "Fichero demasiado largo. El maximo permitido es: $maxsize bytes",
-                'en' => "Too long file size. The maximun permited size is: $maxsize bytes",
+                'en' => "File size too large. The maximum permitted size is: $maxsize bytes",
                 'de' => "Datei zu groß. Die zulässige Maximalgröße ist: $maxsize bytes"
                 ),
             'MISSING_DIR' => array(
@@ -89,17 +89,17 @@ class HTTP_Upload_Error extends PEAR
                 ),
             'E_FAIL_COPY' => array(
                 'es' => 'Fallo al copiar el fichero temporal',
-                'en' => 'Fail to copy the temp file',
+                'en' => 'Failed to copy the temp file',
                 'de' => 'Temporäre Datei konnte nicht kopiert werden'
                 ),
             'FILE_EXISTS' => array(
                 'es' => 'El fichero destino ya existe',
-                'en' => 'The destination file yet exists',
+                'en' => 'The destination file already exists',
                 'de' => 'Die zu erzeugende Datei existiert bereits'
                 ),
             'CANNOT_OVERWRITE' => array(
                 'es' => 'El fichero destino ya existe y no se puede sobreescribir',
-                'en' => 'The destination file yet exists and could not be overwritten',
+                'en' => 'The destination file already exists and could not be overwritten',
                 'de' => 'Die zu erzeugende Datei existiert bereits und konnte nicht überschrieben werden'
                 )
         );

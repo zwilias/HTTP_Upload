@@ -1,5 +1,5 @@
 <html><body>
-<form action="test.php?submit=1" method="post" enctype="multipart/form-data">
+<form action="<?php echo $PHP_SELF;?>?submit=1" method="post" enctype="multipart/form-data">
    Send these files:<br>
   <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="100000">
    

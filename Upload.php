@@ -18,6 +18,10 @@
 *
 * Leyend:
 * - you can add error msgs in your language in the HTTP_Upload_Error class
+*
+* TODO:
+* - addapt the class to new upload features of the 4.1 release
+*   (the new error entry in HTTP_POST_FILES)
 */
 
 require_once 'PEAR.php';
@@ -279,7 +283,21 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     */
     var $mode_name_selected = false;
 
+    /**
+    * It's a common security risk in pages who has the upload dir
+    * under the document root (remember the hack of the Apache web?)
+    *
+    * @var array
+    * @access private
+    * @see HTTP_Upload_File::setValidExtensions()
+    */
     var $_extensions_check = array('php', 'phtm', 'phtml', 'php3', 'inc');
+
+    /**
+    * @see HTTP_Upload_File::setValidExtensions()
+    * @var string
+    * @access private
+    */
     var $_extensions_mode  = 'deny';
 
     /**

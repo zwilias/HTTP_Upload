@@ -256,10 +256,17 @@ class HTTP_Upload extends HTTP_Upload_Error
     function HTTP_Upload($lang = NULL)
     {
         $this->HTTP_Upload_Error($lang);
-        global $HTTP_POST_FILES, $HTTP_SERVER_VARS;
-        $this->post_files = $HTTP_POST_FILES;
-        if (isset($HTTP_SERVER_VARS['CONTENT_TYPE'])) {
-            $this->content_type = $HTTP_SERVER_VARS['CONTENT_TYPE'];
+        if (function_exists('version_compare') && version_compare(phpversion(), '4.1', 'ge')) {
+            $this->post_files = $_FILES;
+            if (isset($_SERVER['CONTENT_TYPE'])) {
+                $this->content_type = $_SERVER['CONTENT_TYPE'];
+            }
+        } else {
+            global $HTTP_POST_FILES, $HTTP_SERVER_VARS;
+            $this->post_files = $HTTP_POST_FILES;
+            if (isset($HTTP_SERVER_VARS['CONTENT_TYPE'])) {
+                $this->content_type = $HTTP_SERVER_VARS['CONTENT_TYPE'];
+            }
         }
     }
 

@@ -20,22 +20,20 @@
  * - you can add error msgs in your language in the HTTP_Upload_Error class
  *
  * TODO:
- * - addapt the class to new upload features of the 4.2 (?) release
- *   (the new error entry in HTTP_POST_FILES)
  * - try to think a way of having all the Error system in other
  *   file and only include it when an error ocurrs
  *
  * -- Note for users of PHP > 4.1 --
  *
- * Due the fact that PHP now doesn't register the HTTP_POST_FILES if no
+ * Due the fact that PHP now doesn't register the $_POST if no
  * uploads are done, the class is not able to give verbose information
  * about what happens. To check that you have to use the new isMissing()
- * method avaible from the $upload object too. For ex:
+ * method avaible from the $upload object too. For instance:
  *
  * $upload = new HTTP_Upload('en');
  * $missing = $upload->isMissing();
  * if (!$missing) {
- *    <code for manage files>
+ *    <code to manage files>
  * } else {
  *    die ($missing->getMessage());
  * }
@@ -65,8 +63,7 @@ class HTTP_Upload_Error extends PEAR
     var $lang = 'en';
 
     /**
-     *   Should the error messages be returned as HTML?
-     *
+     * Whether HTML entities shall be encoded automatically
      * @var boolean
      */
     var $html = FALSE;
@@ -85,11 +82,14 @@ class HTTP_Upload_Error extends PEAR
         $this->html = ($html !== FALSE) ? $html : $this->html;
         $ini_size = preg_replace('/m/i', '000000', ini_get('upload_max_filesize'));
 
-        if (function_exists('version_compare') && version_compare(phpversion(), '4.1', 'ge')) {
-            $maxsize = (isset($_FILES['MAX_FILE_SIZE'])) ? $_FILES['MAX_FILE_SIZE'] : NULL;
+        if (function_exists('version_compare') &&
+            version_compare(phpversion(), '4.1', 'ge')) {
+            $maxsize = (isset($_POST['MAX_FILE_SIZE'])) ?
+                $_POST['MAX_FILE_SIZE'] : NULL;
         } else {
             global $HTTP_POST_VARS;
-            $maxsize = (isset($HTTP_POST_VARS['MAX_FILE_SIZE'])) ? $HTTP_POST_VARS['MAX_FILE_SIZE'] : NULL;
+            $maxsize = (isset($HTTP_POST_VARS['MAX_FILE_SIZE'])) ?
+                $HTTP_POST_VARS['MAX_FILE_SIZE'] : NULL;
         }
 
         if (empty($maxsize) || ($maxsize > $ini_size)) {
@@ -98,106 +98,113 @@ class HTTP_Upload_Error extends PEAR
         // XXXXX Add here error messages in your language
         $this->error_codes = array(
             'TOO_LARGE' => array(
-                'es'    => "Fichero demasiado largo. El maximo permitido es: $maxsize bytes",
-                'en'    => "File size too large. The maximum permitted size is: $maxsize bytes",
-                'de'    => "Datei zu gro&szlig;. Die zul&auml;ssige Maximalgr&ouml;&szlig;e ist: $maxsize bytes",
-                'nl'    => "Het bestand is te groot, de maximale grootte is: $maxsize bytes",
-                'fr'    => "Le fichier est trop gros. La taille maximum autoris&eacute;e est: $maxsize bytes",
-                'it'    => "Il file &eacute; troppo grande. Il massimo permesso &eacute: $maxsize bytes",
-                'pt_BR' => "Arquivo muito grande. O tamanho m&aacute;ximo permitido &eacute;: $maxsize bytes"
+                'es'    => "Fichero demasiado largo. El maximo permitido es: $maxsize bytes.",
+                'en'    => "File size too large. The maximum permitted size is: $maxsize bytes.",
+                'de'    => "Datei zu gro&szlig;. Die zul&auml;ssige Maximalgr&ouml;&szlig;e ist: $maxsize Bytes.",
+                'nl'    => "Het bestand is te groot, de maximale grootte is: $maxsize bytes.",
+                'fr'    => "Le fichier est trop gros. La taille maximum autoris&eacute;e est: $maxsize bytes.",
+                'it'    => "Il file &eacute; troppo grande. Il massimo permesso &eacute: $maxsize bytes.",
+                'pt_BR' => "Arquivo muito grande. O tamanho m&aacute;ximo permitido &eacute; $maxsize bytes."
                 ),
             'MISSING_DIR' => array(
-                'es'    => 'Falta directorio destino',
-                'en'    => 'Missing destination directory',
-                'de'    => 'Kein Zielverzeichnis definiert',
+                'es'    => 'Falta directorio destino.',
+                'en'    => 'Missing destination directory.',
+                'de'    => 'Kein Zielverzeichnis definiert.',
                 'nl'    => 'Geen bestemmings directory.',
-                'fr'    => 'Le r&eacute;pertoire de destination n\'est pas d&eacute;fini',
-                'it'    => 'Manca la directory di destinazione',
-                'pt_BR' => 'Aus&ecirc;ncia de diret&oacute;rio de destino'
+                'fr'    => 'Le r&eacute;pertoire de destination n\'est pas d&eacute;fini.',
+                'it'    => 'Manca la directory di destinazione.',
+                'pt_BR' => 'Aus&ecirc;ncia de diret&oacute;rio de destino.'
                 ),
             'IS_NOT_DIR' => array(
-                'es'    => 'El directorio destino no existe o es un fichero regular',
-                'en'    => 'The destination directory doesn\'t exist or is a regular file',
-                'de'    => 'Das angebene Zielverzeichnis existiert nicht oder ist eine Datei',
-                'nl'    => 'De doeldirectory bestaat niet, of is een gewoon bestand',
-                'fr'    => 'Le r&eacute;pertoire de destination n\'existe pas ou il s\'agit d\'un fichier r&eacute;gulier',
-                'it'    => 'La directory di destinazione non esiste o &eacute; un file',
-                'pt_BR' => 'O diret&oacute;rio de destino n&atilde;o existe ou &eacute; um arquivo'
+                'es'    => 'El directorio destino no existe o es un fichero regular.',
+                'en'    => 'The destination directory doesn\'t exist or is a regular file.',
+                'de'    => 'Das angebene Zielverzeichnis existiert nicht oder ist eine Datei.',
+                'nl'    => 'De doeldirectory bestaat niet, of is een gewoon bestand.',
+                'fr'    => 'Le r&eacute;pertoire de destination n\'existe pas ou il s\'agit d\'un fichier r&eacute;gulier.',
+                'it'    => 'La directory di destinazione non esiste o &eacute; un file.',
+                'pt_BR' => 'O diret&oacute;rio de destino n&atilde;o existe ou &eacute; um arquivo.'
                 ),
             'NO_WRITE_PERMS' => array(
-                'es'    => 'El directorio destino no tiene permisos de escritura',
-                'en'    => 'The destination directory doesn\'t have write perms',
-                'de'    => 'Fehlende Schreibrechte f&uuml;r das Zielverzeichnis',
+                'es'    => 'El directorio destino no tiene permisos de escritura.',
+                'en'    => 'The destination directory doesn\'t have write perms.',
+                'de'    => 'Fehlende Schreibrechte f&uuml;r das Zielverzeichnis.',
                 'nl'    => 'Geen toestemming om te schrijven in de doeldirectory.',
                 'fr'    => 'Le r&eacute;pertoire de destination n\'a pas les droits en &eacute;criture.',
-                'it'    => 'Non si hanno i permessi di scrittura sulla directory di destinazione',
-                'pt_BR' => 'O diret&oacute;rio de destino n&atilde;o possui permiss&atilde;o para escrita'
-
+                'it'    => 'Non si hanno i permessi di scrittura sulla directory di destinazione.',
+                'pt_BR' => 'O diret&oacute;rio de destino n&atilde;o possui permiss&atilde;o para escrita.'
                 ),
             'NO_USER_FILE' => array(
-                'es'    => 'No se ha escogido fichero para el upload',
-                'en'    => 'You haven\'t selected any file for uploading',
-                'de'    => 'Es wurde keine Datei f&uuml;r den Upload ausgew&auml;hlt',
+                'es'    => 'No se ha escogido fichero para el upload.',
+                'en'    => 'You haven\'t selected any file for uploading.',
+                'de'    => 'Es wurde keine Datei f&uuml;r den Upload ausgew&auml;hlt.',
                 'nl'    => 'Er is geen bestand opgegeven om te uploaden.',
                 'fr'    => 'Vous n\'avez pas s&eacute;lectionn&eacute; de fichier &agrave; envoyer.',
-                'it'    => 'Nessun file selezionato per l\'upload',
-                'pt_BR' => 'Nenhum arquivo selecionado para upload'
+                'it'    => 'Nessun file selezionato per l\'upload.',
+                'pt_BR' => 'Nenhum arquivo selecionado para upload.'
                 ),
             'BAD_FORM' => array(
-                'es'    => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido',
-                'en'    => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data"',
+                'es'    => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido.',
+                'en'    => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data".',
                 'de'    => 'Das HTML-Formular enth&auml;lt nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data" '.
-                           'im &gt;form&lt;-Tag',
+                           'im &gt;form&lt;-Tag.',
                 'nl'    => 'Het HTML-formulier bevat niet de volgende benodigde '.
-                           'eigenschappen: method="post" enctype="multipart/form-data"',
+                           'eigenschappen: method="post" enctype="multipart/form-data".',
                 'fr'    => 'Le formulaire HTML ne contient pas les attributs requis : '.
-                           ' method="post" enctype="multipart/form-data"',
+                           ' method="post" enctype="multipart/form-data".',
                 'it'    => 'Il modulo HTML non contiene gli attributi richiesti: "'.
-                           ' method="post" enctype="multipart/form-data"',
-                'pt_BR' => 'O formul&aacute;rio HTML n&atilde;o possui o method="post" enctype="multipart/form-data" requerido'
+                           ' method="post" enctype="multipart/form-data".',
+                'pt_BR' => 'O formul&aacute;rio HTML n&atilde;o possui o method="post" enctype="multipart/form-data" requerido.'
                 ),
             'E_FAIL_COPY' => array(
-                'es'    => 'Fallo al copiar el fichero temporal',
-                'en'    => 'Failed to copy the temporary file',
-                'de'    => 'Tempor&auml;re Datei konnte nicht kopiert werden',
-                'nl'    => 'Het tijdelijke bestand kon niet gekopieerd worden',
-                'fr'    => 'L\'enregistrement du fichier temporaire a &eacute;chou&eacute;',
-                'it'    => 'Copia del file temporaneo fallita',
-                'pt_BR' => 'Falha ao copiar o arquivo tempor&aacute;rio'
-
+                'es'    => 'Fallo al copiar el fichero temporal.',
+                'en'    => 'Failed to copy the temporary file.',
+                'de'    => 'Tempor&auml;re Datei konnte nicht kopiert werden.',
+                'nl'    => 'Het tijdelijke bestand kon niet gekopieerd worden.',
+                'fr'    => 'L\'enregistrement du fichier temporaire a &eacute;chou&eacute;.',
+                'it'    => 'Copia del file temporaneo fallita.',
+                'pt_BR' => 'Falha ao copiar o arquivo tempor&aacute;rio.'
                 ),
             'E_FAIL_MOVE' => array(
-                'es'    => 'No puedo mover el fichero',
-                'en'    => 'Impossible to move the file',
-                'fr'    => 'Impossible de d&eacute;placer le fichier',
-                'pt_BR' => 'N&atilde;o foi poss&iacute;vel mover o arquivo'
+                'es'    => 'No puedo mover el fichero.',
+                'en'    => 'Impossible to move the file.',
+                'de'    => 'Datei kann nicht verschoben werden.',
+                'fr'    => 'Impossible de d&eacute;placer le fichier.',
+                'pt_BR' => 'N&atilde;o foi poss&iacute;vel mover o arquivo.'
                 ),
             'FILE_EXISTS' => array(
-                'es'    => 'El fichero destino ya existe',
-                'en'    => 'The destination file already exists',
-                'de'    => 'Die zu erzeugende Datei existiert bereits',
-                'nl'    => 'Het doelbestand bestaat al',
-                'fr'    => 'Le fichier de destination existe d&eacute;j&agrave;',
-                'it'    => 'File destinazione gi&agrave; esistente',
-                'pt_BR' => 'O arquivo de destino j&aacute; existe'
+                'es'    => 'El fichero destino ya existe.',
+                'en'    => 'The destination file already exists.',
+                'de'    => 'Die zu erzeugende Datei existiert bereits.',
+                'nl'    => 'Het doelbestand bestaat al.',
+                'fr'    => 'Le fichier de destination existe d&eacute;j&agrave;.',
+                'it'    => 'File destinazione gi&agrave; esistente.',
+                'pt_BR' => 'O arquivo de destino j&aacute; existe.'
                 ),
             'CANNOT_OVERWRITE' => array(
-                'es'    => 'El fichero destino ya existe y no se puede sobreescribir',
-                'en'    => 'The destination file already exists and could not be overwritten',
-                'de'    => 'Die zu erzeugende Datei existiert bereits und konnte nicht &uuml;berschrieben werden',
-                'nl'    => 'Het doelbestand bestaat al, en kon niet worden overschreven',
-                'fr'    => 'Le fichier de destination existe d&eacute;j&agrave; et ne peux pas &ecirc;tre remplac&eacute;',
-                'it'    => 'File destinazione gi&agrave; esistente e non si pu&ograve; sovrascrivere',
-                'pt_BR' => 'O arquivo de destino j&aacute; existe e n&atilde;o p&ocirc;de ser sobrescrito'
+                'es'    => 'El fichero destino ya existe y no se puede sobreescribir.',
+                'en'    => 'The destination file already exists and could not be overwritten.',
+                'de'    => 'Die zu erzeugende Datei existiert bereits und konnte nicht &uuml;berschrieben werden.',
+                'nl'    => 'Het doelbestand bestaat al, en kon niet worden overschreven.',
+                'fr'    => 'Le fichier de destination existe d&eacute;j&agrave; et ne peux pas &ecirc;tre remplac&eacute;.',
+                'it'    => 'File destinazione gi&agrave; esistente e non si pu&ograve; sovrascrivere.',
+                'pt_BR' => 'O arquivo de destino j&aacute; existe e n&atilde;o p&ocirc;de ser sobrescrito.'
                 ),
             'NOT_ALLOWED_EXTENSION' => array(
-                'es'    => 'Extension de fichero no permitida',
-                'en'    => 'File extension not permitted',
-                'de'    => 'Unerlaubte Dateiendung',
+                'es'    => 'Extension de fichero no permitida.',
+                'en'    => 'File extension not permitted.',
+                'de'    => 'Unerlaubte Dateiendung.',
                 'nl'    => 'Niet toegestane bestands-extensie.',
                 'fr'    => 'Le fichier a une extension non autoris&eacute;e.',
-                'it'    => 'Estensione del File non permessa',
-                'pt_BR' => 'Extens&atilde;o de arquivo n&atilde;o permitida'
+                'it'    => 'Estensione del File non permessa.',
+                'pt_BR' => 'Extens&atilde;o de arquivo n&atilde;o permitida.'
+                ),
+            'PARTIAL' => array(
+                'en'    => 'The file was only partially uploaded.',
+                'pt_BR' => 'O arquivo não foi enviado por completo.'
+                ),
+            'ERROR' => array(
+                'en'    => 'Upload error:',
+                'pt_BR' => 'Erro de upload:'
                 )
         );
     }
@@ -217,7 +224,13 @@ class HTTP_Upload_Error extends PEAR
         } else {
             $msg = $e_code;
         }
-        return 'Upload Error: '. $msg;
+
+        if (!empty($this->error_codes['ERROR'][$this->lang])) {
+            $error = $this->error_codes['ERROR'][$this->lang];
+        } else {
+            $error = $this->error_codes['ERROR']['en'];
+        }
+        return $error.' '.$msg;
     }
 
     /**
@@ -260,7 +273,8 @@ class HTTP_Upload extends HTTP_Upload_Error
     function HTTP_Upload($lang = NULL)
     {
         $this->HTTP_Upload_Error($lang);
-        if (function_exists('version_compare') && version_compare(phpversion(), '4.1', 'ge')) {
+        if (function_exists('version_compare') &&
+            version_compare(phpversion(), '4.1', 'ge')) {
             $this->post_files = $_FILES;
             if (isset($_SERVER['CONTENT_TYPE'])) {
                 $this->content_type = $_SERVER['CONTENT_TYPE'];
@@ -288,7 +302,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @return mixed array or object (see @param $file above) or Pear_Error
      * @access public
      */
-    function &getFiles($file = null)
+    function &getFiles($file = NULL)
     {
         //build only once for multiple calls
         if (!isset($this->is_built)) {
@@ -296,9 +310,9 @@ class HTTP_Upload extends HTTP_Upload_Error
             if (PEAR::isError($this->files)) {
                 return $this->files;
             }
-            $this->is_built = true;
+            $this->is_built = TRUE;
         }
-        if ($file !== null) {
+        if ($file !== NULL) {
             if (is_int($file)) {
                 $pos = 0;
                 foreach ($this->files as $key => $obj) {
@@ -323,44 +337,70 @@ class HTTP_Upload extends HTTP_Upload_Error
     function &_buildFiles()
     {
         // Form method check
-        if (!isset($this->content_type) || !ereg('^multipart/form-data', $this->content_type)) {
+        if (!isset($this->content_type) ||
+            strpos($this->content_type, 'multipart/form-data') !== 0) {
             return $this->raiseError('BAD_FORM');
         }
-        // In 4.1 HTTP_POST_FILES isn't initialized when no uploads
-        if (function_exists('version_compare') && version_compare(phpversion(), '4.1', 'ge')) {
+        // In 4.1 $_FILES isn't initialized when no uploads
+        if (function_exists('version_compare') &&
+            version_compare(phpversion(), '4.1', 'ge')) {
             $error = $this->isMissing();
             if (PEAR::isError($error)) {
                 return $error;
             }
         }
 
-        // Parse $HTTP_POST_FILES
+        // map error codes from 4.2.0 $_FILES['userfile']['error']
+        if (function_exists('version_compare') &&
+            version_compare(phpversion(), '4.2.0', 'ge')) {
+            $uploadError = array(
+                1 => 'TOO_LARGE',
+                2 => 'TOO_LARGE',
+                3 => 'PARTIAL',
+                4 => 'NO_USER_FILE'
+                );
+        }
+
+
+        // Parse $_FILES (or $HTTP_POST_FILES)
         $files = array();
         foreach ($this->post_files as $userfile => $value) {
             if (is_array($value['name'])) {
                 foreach ($value['name'] as $key => $val) {
+                    $err = $value['error'][$key];
+                    if (isset($err) && $err !== 0 && isset($uploadError[$err])) {
+                        $error = $uploadError[$err];
+                    } else {
+                        $error = NULL;
+                    }
                     $name = basename($value['name'][$key]);
                     $tmp_name = $value['tmp_name'][$key];
                     $size = $value['size'][$key];
                     $type = $value['type'][$key];
                     $formname = $userfile . "[$key]";
                     $files[$formname] = new HTTP_Upload_File($name, $tmp_name,
-                                            $formname, $type, $size, $this->lang);
+                                                             $formname, $type, $size, $error, $this->lang);
                 }
-            // One file
-            } else {
+                // One file
+            } else { 
+                $err = $value['error'];
+                if (isset($err) && $err !== 0 && isset($uploadError[$err])) {
+                    $error = $uploadError[$err];
+                } else {
+                    $error = NULL;
+                }
                 $name = basename($value['name']);
                 $tmp_name = $value['tmp_name'];
                 $size = $value['size'];
                 $type = $value['type'];
                 $formname = $userfile;
                 $files[$formname] = new HTTP_Upload_File($name, $tmp_name,
-                                            $formname, $type, $size, $this->lang);
+                                                         $formname, $type, $size, $error, $this->lang);
             }
         }
         return $files;
     }
-
+    
     /**
      * Checks if the user submited or not some file
      *
@@ -373,8 +413,7 @@ class HTTP_Upload extends HTTP_Upload_Error
         if (count($this->post_files) < 1) {
             return $this->raiseError('NO_USER_FILE');
         }
-        return false;
-
+        return FALSE;
     }
 }
 
@@ -404,7 +443,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * If user haven't selected a mode, by default 'safe' will be used
      * @var boolean
      */
-    var $mode_name_selected = false;
+    var $mode_name_selected = FALSE;
 
     /**
      * It's a common security risk in pages who has the upload dir
@@ -431,35 +470,41 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @param   string  $formname   name of the form
      * @param   string  $type       Mime type of the file
      * @param   string  $size       size of the file
+     * @param   string  $error      error on upload
      * @param   string  $lang       used language for errormessages
      * @access  public
      */
-    function HTTP_Upload_File($name=null, $tmp=null,  $formname=null,
-                               $type=null, $size=null, $lang=null)
+    function HTTP_Upload_File($name = NULL, $tmp = NULL,  $formname = NULL,
+                              $type = NULL, $size = NULL, $error = NULL, $lang = NULL)
     {
         $this->HTTP_Upload_Error($lang);
-        $error = null;
-        $ext   = null;
+        $ext = NULL;
+
         if (empty($name)) {
             $error = 'NO_USER_FILE';
         } elseif ($tmp == 'none') {
             $error = 'TOO_LARGE';
         } else {
             // strpos needed to detect files without extension
-            if (($pos = strrpos($name, '.')) !== false) {
-                $ext = substr ($name, $pos + 1);
+            if (($pos = strrpos($name, '.')) !== FALSE) {
+                $ext = substr($name, $pos + 1);
             }
         }
-
-        global $HTTP_POST_VARS;
-        // Seems that PHP 4.1.1 doesn't handle the MAX_FILE_SIZE correctly
-        // or I didn't find the new way
-        if (isset($HTTP_POST_VARS['MAX_FILE_SIZE']) &&
-            $size > $HTTP_POST_VARS['MAX_FILE_SIZE'])
-        {
-            $error = 'TOO_LARGE';
+        
+        if (function_exists('version_compare') &&
+            version_compare(phpversion(), '4.1', 'ge')) {
+            if (isset($_POST['MAX_FILE_SIZE']) &&
+                $size > $_POST['MAX_FILE_SIZE']) {
+                $error = 'TOO_LARGE';
+            }
+        } else {
+            global $HTTP_POST_VARS;
+            if (isset($HTTP_POST_VARS['MAX_FILE_SIZE']) &&
+                $size > $HTTP_POST_VARS['MAX_FILE_SIZE']) {
+                $error = 'TOO_LARGE';
+            }
         }
-
+        
         $this->upload = array(
             'real'      => $name,
             'name'      => $name,
@@ -482,7 +527,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return string The modified name of the destination file
      * @access public
      */
-    function setName($mode, $prepend=null, $append=null)
+    function setName($mode, $prepend = NULL, $append = NULL)
     {
         switch ($mode) {
             case 'uniq':
@@ -492,7 +537,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
                 break;
             case 'safe':
                 $name = $this->nameToSafe($this->upload['real']);
-                if (($pos = strrpos($name, '.')) !== false) {
+                if (($pos = strrpos($name, '.')) !== FALSE) {
                     $this->upload['ext'] = substr($name, $pos + 1);
                 } else {
                     $this->upload['ext'] = '';
@@ -505,7 +550,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
                 $name = $mode;
         }
         $this->upload['name'] = $prepend . $name . $append;
-        $this->mode_name_selected = true;
+        $this->mode_name_selected = TRUE;
         return $this->upload['name'];
     }
 
@@ -536,10 +581,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         $noalpha = 'ÁÉÍÓÚÝáéíóúýÂÊÎÔÛâêîôûÀÈÌÒÙàèìòùÄËÏÖÜäëïöüÿÃãÕõÅåÑñÇç@°ºª';
         $alpha   = 'AEIOUYaeiouyAEIOUaeiouAEIOUaeiouAEIOUaeiouyAaOoAaNnCcaooa';
         
-        $name = substr ($name, 0, $maxlen);
-        $name = strtr ($name, $noalpha, $alpha);
+        $name = substr($name, 0, $maxlen);
+        $name = strtr($name, $noalpha, $alpha);
         // not permitted chars are replaced with "_"
-        return preg_replace ('/[^a-zA-Z0-9,._\+\()\-]/', '_', $name);
+        return preg_replace('/[^a-zA-Z0-9,._\+\()\-]/', '_', $name);
     }
 
     /**
@@ -550,10 +595,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      */
     function isValid()
     {
-        if ($this->upload['error'] === null) {
-            return true;
+        if ($this->upload['error'] === NULL) {
+            return TRUE;
         }
-        return false;
+        return FALSE;
     }
 
     /**
@@ -565,9 +610,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     function isMissing()
     {
         if ($this->upload['error'] == 'NO_USER_FILE') {
-            return true;
+            return TRUE;
         }
-        return false;
+        return FALSE;
     }
 
     /**
@@ -580,9 +625,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     function isError()
     {
         if ($this->upload['error'] == 'TOO_LARGE') {
-            return true;
+            return TRUE;
         }
-        return false;
+        return FALSE;
     }
 
     /**
@@ -648,7 +693,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         if (!is_writeable ($dir_dest)) {
             return 'NO_WRITE_PERMS';
         }
-        return false;
+        return FALSE;
     }
     /**
      * Retrive properties of the uploaded file
@@ -658,9 +703,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @see HTTP_Upload_File::HTTP_Upload_File()
      * @access public
      */
-    function getProp($name=null)
+    function getProp($name = NULL)
     {
-        if ($name === null) {
+        if ($name === NULL) {
             return $this->upload;
         }
         return $this->upload[$name];
@@ -715,15 +760,15 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         settype($exts, 'array');
         if ($this->_extensions_mode == 'deny') {
             if (in_array($this->getProp('ext'), $exts)) {
-                return false;
+                return FALSE;
             }
         // mode == 'accept'
         } else {
             if (!in_array($this->getProp('ext'), $exts)) {
-                return false;
+                return FALSE;
             }
         }
-        return true;
+        return TRUE;
     }
 }
 ?>

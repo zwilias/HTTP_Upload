@@ -101,6 +101,10 @@ class HTTP_Upload_Error extends PEAR
                 'es' => 'El fichero destino ya existe y no se puede sobreescribir',
                 'en' => 'The destination file already exists and could not be overwritten',
                 'de' => 'Die zu erzeugende Datei existiert bereits und konnte nicht &uuml;berschrieben werden'
+                ),
+            'NOT_ALLOWED_EXTENSION' => array(
+                'es' => 'Extension de fichero no valida',
+                'en' => 'Not valid file extension'
                 )
         );
     }
@@ -275,6 +279,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     */
     var $mode_name_selected = false;
 
+    var $_extensions_check = array('php', 'phtm', 'phtml', 'php3', 'inc');
+    var $_extensions_mode  = 'deny';
+
     /**
     * Constructor
     *
@@ -434,6 +441,12 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         if (!$this->isValid()) {
             return $this->raiseError($this->upload['error']);
         }
+
+        //Valid extensions check
+        if (!$this->_evalValidExtensions()) {
+            return $this->raiseError('NOT_ALLOWED_EXTENSION');
+        }
+
         $err_code = $this->_chk_dir_dest($dir_dest);
         if ($err_code !== false) {
             return $this->raiseError($err_code);
@@ -503,6 +516,29 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     function errorMsg()
     {
         return $this->errorCode($this->upload['error']);
+    }
+
+    function setValidExtensions($exts, $mode = 'deny')
+    {
+        $this->_extensions_check = $exts;
+        $this->_extensions_mode  = $mode;
+    }
+
+    function _evalValidExtensions()
+    {
+        $exts = $this->_extensions_check;
+        settype($exts, 'array');
+        if ($this->_extensions_mode == 'deny') {
+            if (in_array($exts, $this->getProp('ext'))) {
+                return false;
+            }
+        // mode == 'accept'
+        } else {
+            if (!in_array($exts, $this->getProp('ext'))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ?>

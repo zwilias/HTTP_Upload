@@ -63,53 +63,64 @@ class HTTP_Upload_Error extends PEAR
             'TOO_LARGE' => array(
                 'es' => "Fichero demasiado largo. El maximo permitido es: $maxsize bytes",
                 'en' => "File size too large. The maximum permitted size is: $maxsize bytes",
-                'de' => "Datei zu gro&szlig;. Die zul&auml;ssige Maximalgr&ouml;&szlig;e ist: $maxsize bytes"
+                'de' => "Datei zu gro&szlig;. Die zul&auml;ssige Maximalgr&ouml;&szlig;e ist: $maxsize bytes",
+				'nl' => "Het bestand is te groot, de maximale grootte is: $maxsize bytes"
                 ),
             'MISSING_DIR' => array(
                 'es' => 'Falta directorio destino',
                 'en' => 'Missing destination directory',
-                'de' => 'Kein Zielverzeichnis definiert'
+                'de' => 'Kein Zielverzeichnis definiert',
+                'nl' => 'Geen bestemmings directory.'
                 ),
             'IS_NOT_DIR' => array(
                 'es' => 'El directorio destino no existe o es un fichero regular',
                 'en' => 'The destination directory doesn\'t exist or is a regular file',
-                'de' => 'Das angebene Zielverzeichnis existiert nicht oder ist eine Datei'
+                'de' => 'Das angebene Zielverzeichnis existiert nicht oder ist eine Datei',
+                'nl' => 'De doeldirectory bestaat niet, of is een gewoon bestand'
                 ),
             'NO_WRITE_PERMS' => array(
                 'es' => 'El directorio destino no tiene permisos de escritura',
                 'en' => 'The destination directory doesn\'t have write perms',
-                'de' => 'Fehlende Schreibrechte f&uuml;r das Zielverzeichnis'
+                'de' => 'Fehlende Schreibrechte f&uuml;r das Zielverzeichnis',
+                'nl' => 'Geen toestemming om te schrijven in de doeldirectory.'
                 ),
             'NO_USER_FILE' => array(
                 'es' => 'No se ha escogido fichero para el upload',
                 'en' => 'You haven\'t selected any file for uploading',
-                'de' => 'Es wurde keine Datei für den Upload ausgew&auml;hlt'
+                'de' => 'Es wurde keine Datei für den Upload ausgew&auml;hlt',
+                'nl' => 'Er is geen bestand opgegeven om te uploaden.'
                 ),
             'BAD_FORM' => array(
                 'es' => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido',
                 'en' => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data"',
                 'de' => 'Das HTML-Formular enth&auml;lt nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data" '.
-                        'im &gt;form&lt;-Tag'
+                        'im &gt;form&lt;-Tag',
+				'nl' => 'Het HTML-formulier bevat niet de volgende benodigde '.
+                        'eigenschappen: method="post" enctype="multipart/form-data"'
                 ),
             'E_FAIL_COPY' => array(
                 'es' => 'Fallo al copiar el fichero temporal',
                 'en' => 'Failed to copy the temporary file',
-                'de' => 'Tempor&auml;re Datei konnte nicht kopiert werden'
+                'de' => 'Tempor&auml;re Datei konnte nicht kopiert werden',
+                'nl' => 'Het tijdelijke bestand kon niet gekopieerd worden'
                 ),
             'FILE_EXISTS' => array(
                 'es' => 'El fichero destino ya existe',
                 'en' => 'The destination file already exists',
-                'de' => 'Die zu erzeugende Datei existiert bereits'
+                'de' => 'Die zu erzeugende Datei existiert bereits',
+                'nl' => 'Het doelbestand bestaat al'
                 ),
             'CANNOT_OVERWRITE' => array(
                 'es' => 'El fichero destino ya existe y no se puede sobreescribir',
                 'en' => 'The destination file already exists and could not be overwritten',
-                'de' => 'Die zu erzeugende Datei existiert bereits und konnte nicht &uuml;berschrieben werden'
+                'de' => 'Die zu erzeugende Datei existiert bereits und konnte nicht &uuml;berschrieben werden',
+                'nl' => 'Het doelbestand bestaat al, en kon niet worden overschreven'
                 ),
             'NOT_ALLOWED_EXTENSION' => array(
                 'es' => 'Extension de fichero no permitida',
                 'en' => 'Not permitted file extension',
-                'de' => 'Unerlaubte Dateiendung'
+                'de' => 'Unerlaubte Dateiendung',
+                'nl' => 'Niet toegestane bestands-extensie.'
                 )
         );
     }

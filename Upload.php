@@ -3,7 +3,7 @@
 //
 // This software is licensed by the LGPL
 // -> http://www.gnu.org/copyleft/lesser.txt
-// (c) 2001 by Tomas Von Veschler Cox
+// (c) 2001-2004 by Tomas Von Veschler Cox
 //
 // **********************************************
 //
@@ -13,9 +13,6 @@
  * Pear File Uploader class. Easy and secure managment of files
  * submitted via HTML Forms.
  *
- * @see http://vulcanonet.com/soft/index.php?pack=uploader
- * @author Tomas V.V.Cox <cox@vulcanonet.com>
- *
  * Leyend:
  * - you can add error msgs in your language in the HTTP_Upload_Error class
  *
@@ -23,25 +20,23 @@
  * - try to think a way of having all the Error system in other
  *   file and only include it when an error ocurrs
  *
- * -- Note for users of PHP > 4.1 --
+ * -- Notes for users HTTP_Upload >= 0.9.0 --
  *
- * Due the fact that PHP now doesn't register the $_POST if no
- * uploads are done, the class is not able to give verbose information
- * about what happens. To check that you have to use the new isMissing()
- * method avaible from the $upload object too. For instance:
+ *  Error detection was enhanced, so you no longer need to
+ *  check for PEAR::isError() in $upload->getFiles() or call
+ *  $upload->isMissing(). Instead you'll
+ *  get the error when do a check for $file->isError().
  *
- * $upload = new HTTP_Upload('en');
- * $missing = $upload->isMissing();
- * if (!$missing) {
- *    <code to manage files>
- * } else {
- *    die ($missing->getMessage());
- * }
+ *  Example:
  *
- * -- Notes --
+ *  $upload = new HTTP_Upload('en');
+ *  $file = $upload->getFiles('i_dont_exist_in_form_definition');
+ *  if ($file->isError()) {
+ *     die($file->getMessage());
+ *  }
  *
- * @package  HTTP_Upload
- * @category HTTP
+ *  --
+ *
  */
 
 require_once 'PEAR.php';
@@ -49,7 +44,8 @@ require_once 'PEAR.php';
 /**
  * Error Class for HTTP_Upload
  *
- * @author  Tomas V.V.Cox <cox@vulcanonet.com>
+ * @author  Tomas V.V.Cox <cox@idecnet.com>
+ * @see http://vulcanonet.com/soft/index.php?pack=uploader
  * @package HTTP_Upload
  * @category HTTP
  * @access public
@@ -199,14 +195,20 @@ class HTTP_Upload_Error extends PEAR
                 'pt_BR' => 'Extens&atilde;o de arquivo n&atilde;o permitida.'
                 ),
             'PARTIAL' => array(
+                'es'    => 'El fichero fue parcialmente subido',
                 'en'    => 'The file was only partially uploaded.',
                 'de'    => 'Die Datei wurde unvollst&auml;ndig &uuml;bertragen.',
                 'pt_BR' => 'O arquivo não foi enviado por completo.'
                 ),
             'ERROR' => array(
+                'es'    => 'Error en subida:',
                 'en'    => 'Upload error:',
                 'de'    => 'Fehler beim Upload:',
                 'pt_BR' => 'Erro de upload:'
+                ),
+            'DEV_NO_DEF_FILE' => array(
+                'es'    => 'No está definido en el formulario este nombre de fichero como &lt;form type="file" name=?&gt;',
+                'en'    => 'This is filename is not defined in the form as &lt;form type="file" name=?&gt;',
                 )
         );
     }
@@ -252,7 +254,8 @@ class HTTP_Upload_Error extends PEAR
  * This class provides an advanced file uploader system
  * for file uploads made from html forms
  *
- * @author   Tomas V.V.Cox <cox@vulcanonet.com>
+ * @author  Tomas V.V.Cox <cox@idecnet.com>
+ * @see http://vulcanonet.com/soft/index.php?pack=uploader
  * @package  HTTP_Upload
  * @category HTTP
  * @access   public
@@ -276,7 +279,8 @@ class HTTP_Upload extends HTTP_Upload_Error
     {
         $this->HTTP_Upload_Error($lang);
         if (function_exists('version_compare') &&
-            version_compare(phpversion(), '4.1', 'ge')) {
+            version_compare(phpversion(), '4.1', 'ge'))
+        {
             $this->post_files = $_FILES;
             if (isset($_SERVER['CONTENT_TYPE'])) {
                 $this->content_type = $_SERVER['CONTENT_TYPE'];
@@ -304,20 +308,29 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @return mixed array or object (see @param $file above) or Pear_Error
      * @access public
      */
-    function &getFiles($file = NULL)
+    function &getFiles($file = null)
     {
+        static $is_built = false;
         //build only once for multiple calls
-        if (!isset($this->is_built)) {
-            $this->files = $this->_buildFiles();
-            if (PEAR::isError($this->files)) {
-                return $this->files;
+        if (!$is_built) {
+            $files = &$this->_buildFiles();
+            if (PEAR::isError($files)) {
+                // there was an error with the form.
+                // Create a faked upload embedding the error
+                $this->files['_error'] =  &new HTTP_Upload_File(
+                                                       '_error', null,
+                                                       null, null,
+                                                       null, $files->getCode(),
+                                                       $this->lang);
+            } else {
+                $this->files = $files;
             }
-            $this->is_built = TRUE;
+            $is_built = true;
         }
-        if ($file !== NULL) {
+        if ($file !== null) {
             if (is_int($file)) {
                 $pos = 0;
-                foreach ($this->files as $key => $obj) {
+                foreach ($this->files as $obj) {
                     if ($pos == $file) {
                         return $obj;
                     }
@@ -326,7 +339,17 @@ class HTTP_Upload extends HTTP_Upload_Error
             } elseif (is_string($file) && isset($this->files[$file])) {
                 return $this->files[$file];
             }
-            return $this->raiseError('requested file not found'); // XXXX
+            if (isset($this->files['_error'])) {
+                return $this->files['_error'];
+            } else {
+                // developer didn't specify this name in the form
+                // warn him about it with a faked upload
+                return new HTTP_Upload_File(
+                                           '_error', null,
+                                           null, null,
+                                           null, 'DEV_NO_DEF_FILE',
+                                           $this->lang);
+            }
         }
         return $this->files;
     }
@@ -340,12 +363,15 @@ class HTTP_Upload extends HTTP_Upload_Error
     {
         // Form method check
         if (!isset($this->content_type) ||
-            strpos($this->content_type, 'multipart/form-data') !== 0) {
+            strpos($this->content_type, 'multipart/form-data') !== 0)
+        {
             return $this->raiseError('BAD_FORM');
         }
         // In 4.1 $_FILES isn't initialized when no uploads
+        // XXX (cox) afaik, in >= 4.1 and <= 4.3 only
         if (function_exists('version_compare') &&
-            version_compare(phpversion(), '4.1', 'ge')) {
+            version_compare(phpversion(), '4.1', 'ge'))
+        {
             $error = $this->isMissing();
             if (PEAR::isError($error)) {
                 return $error;
@@ -384,7 +410,7 @@ class HTTP_Upload extends HTTP_Upload_Error
                                                              $formname, $type, $size, $error, $this->lang);
                 }
                 // One file
-            } else { 
+            } else {
                 $err = $value['error'];
                 if (isset($err) && $err !== 0 && isset($uploadError[$err])) {
                     $error = $uploadError[$err];
@@ -402,7 +428,7 @@ class HTTP_Upload extends HTTP_Upload_Error
         }
         return $files;
     }
-    
+
     /**
      * Checks if the user submited or not some file
      *
@@ -415,14 +441,15 @@ class HTTP_Upload extends HTTP_Upload_Error
         if (count($this->post_files) < 1) {
             return $this->raiseError('NO_USER_FILE');
         }
-        return FALSE;
+        return false;
     }
 }
 
 /**
  * This class provides functions to work with the uploaded file
  *
- * @author   Tomas V.V.Cox <cox@vulcanonet.com>
+ * @author  Tomas V.V.Cox <cox@idecnet.com>
+ * @see http://vulcanonet.com/soft/index.php?pack=uploader
  * @package  HTTP_Upload
  * @category HTTP
  * @access   public
@@ -492,7 +519,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
                 $ext = substr($name, $pos + 1);
             }
         }
-        
+
         if (function_exists('version_compare') &&
             version_compare(phpversion(), '4.1', 'ge')) {
             if (isset($_POST['MAX_FILE_SIZE']) &&
@@ -506,7 +533,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
                 $error = 'TOO_LARGE';
             }
         }
-        
+
         $this->upload = array(
             'real'      => $name,
             'name'      => $name,
@@ -582,7 +609,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     {
         $noalpha = 'ÁÉÍÓÚÝáéíóúýÂÊÎÔÛâêîôûÀÈÌÒÙàèìòùÄËÏÖÜäëïöüÿÃãÕõÅåÑñÇç@°ºª';
         $alpha   = 'AEIOUYaeiouyAEIOUaeiouAEIOUaeiouAEIOUaeiouyAaOoAaNnCcaooa';
-        
+
         $name = substr($name, 0, $maxlen);
         $name = strtr($name, $noalpha, $alpha);
         // not permitted chars are replaced with "_"
@@ -626,7 +653,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      */
     function isError()
     {
-        if ($this->upload['error'] == 'TOO_LARGE') {
+        if (in_array($this->upload['error'], array('TOO_LARGE', 'BAD_FORM','DEV_NO_DEF_FILE'))) {
             return TRUE;
         }
         return FALSE;

@@ -386,7 +386,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @param   string  $lang       used language for errormessages
     * @access  public
     */
-    function HTTP_Upload_File ($name=null, $tmp=null,  $formname=null,
+    function HTTP_Upload_File($name=null, $tmp=null,  $formname=null,
                                $type=null, $size=null, $lang=null)
     {
         $this->HTTP_Upload_Error($lang);
@@ -434,7 +434,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @return string The modified name of the destination file
     * @access public
     */
-    function setName ($mode, $prepend=null, $append=null)
+    function setName($mode, $prepend=null, $append=null)
     {
         switch ($mode) {
             case 'uniq':
@@ -465,7 +465,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * Unique file names in the form: 9022210413b75410c28bef.html
     * @see HTTP_Upload_File::setName()
     */
-    function nameToUniq ()
+    function nameToUniq()
     {
         if (! $this->_seeded) {
             srand((double) microtime() * 1000000);
@@ -483,7 +483,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @return   string Formatted file name
     * @see HTTP_Upload_File::setName()
     */
-    function nameToSafe ($name, $maxlen=250)
+    function nameToSafe($name, $maxlen=250)
     {
         $noalpha = 'áéíóúàèìòùäëïöüÁÉÍÓÚÀÈÌÒÙÄËÏÖÜâêîôûÂÊÎÔÛñçÇ@';
         $alpha =   'aeiouaeiouaeiouAEIOUAEIOUAEIOUaeiouAEIOUncCa';
@@ -544,7 +544,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @return   mixed   True on success or Pear_Error object on error
     * @access public
     */
-    function moveTo ($dir_dest, $overwrite=true)
+    function moveTo($dir_dest, $overwrite=true)
     {
         if (!$this->isValid()) {
             return $this->raiseError($this->upload['error']);
@@ -587,7 +587,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @param    string  $dir_dest Destination dir
     * @return   mixed   False on no errors or error code on error
     */
-    function _chk_dir_dest ($dir_dest)
+    function _chk_dir_dest($dir_dest)
     {
         if (!$dir_dest) {
             return 'MISSING_DIR';
@@ -608,7 +608,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     * @see HTTP_Upload_File::HTTP_Upload_File()
     * @access public
     */
-    function getProp ($name=null)
+    function getProp($name=null)
     {
         if ($name === null) {
             return $this->upload;

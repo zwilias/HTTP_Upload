@@ -200,10 +200,12 @@ class HTTP_Upload_Error extends PEAR
                 ),
             'PARTIAL' => array(
                 'en'    => 'The file was only partially uploaded.',
+                'de'    => 'Die Datei wurde unvollst&auml;ndig &uuml;bertragen.',
                 'pt_BR' => 'O arquivo não foi enviado por completo.'
                 ),
             'ERROR' => array(
                 'en'    => 'Upload error:',
+                'de'    => 'Fehler beim Upload:',
                 'pt_BR' => 'Erro de upload:'
                 )
         );

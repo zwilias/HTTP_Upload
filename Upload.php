@@ -81,12 +81,16 @@ class HTTP_Upload_Error extends PEAR
      */
     function HTTP_Upload_Error($lang = NULL, $html = FALSE)
     {
-        global $HTTP_POST_VARS;
-
         $this->lang = ($lang !== NULL) ? $lang : $this->lang;
         $this->html = ($html !== FALSE) ? $html : $this->html;
-        $maxsize = (isset($HTTP_POST_VARS['MAX_FILE_SIZE'])) ? $HTTP_POST_VARS['MAX_FILE_SIZE'] : NULL;
         $ini_size = preg_replace('/m/i', '000000', ini_get('upload_max_filesize'));
+
+        if (function_exists('version_compare') && version_compare(phpversion(), '4.1', 'ge')) {
+            $maxsize = (isset($_FILES['MAX_FILE_SIZE'])) ? $_FILES['MAX_FILE_SIZE'] : NULL;
+        } else {
+            global $HTTP_POST_VARS;
+            $maxsize = (isset($HTTP_POST_VARS['MAX_FILE_SIZE'])) ? $HTTP_POST_VARS['MAX_FILE_SIZE'] : NULL;
+        }
 
         if (empty($maxsize) || ($maxsize > $ini_size)) {
             $maxsize = $ini_size;

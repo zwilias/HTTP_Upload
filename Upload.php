@@ -488,12 +488,13 @@ class HTTP_Upload extends HTTP_Upload_Error
     function isMissing()
     {
         if (count($this->post_files) < 1) {
-            echo 111;
             return $this->raiseError('NO_USER_FILE');
         }
         //we also check if at least one file has more than 0 bytes :)
         $files = array();
         $size = 0;
+        $error = null;
+
         foreach ($this->post_files as $userfile => $value) {
             if (is_array($value['name'])) {
                 foreach ($value['name'] as $key => $val) {

@@ -108,7 +108,8 @@ class HTTP_Upload_Error extends PEAR
                 ),
             'NOT_ALLOWED_EXTENSION' => array(
                 'es' => 'Extension de fichero no permitida',
-                'en' => 'Not permitted file extension'
+                'en' => 'Not permitted file extension',
+                'de' => 'Unerlaubte Dateiendung'
                 )
         );
     }

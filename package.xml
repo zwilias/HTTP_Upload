@@ -73,7 +73,7 @@ TODO:
       <dir name="/" baseinstalldir="HTTP">
 	<file role="php" md5sum="c6ca9a2bf44dc9cac1997f401ea18709">Upload.php</file>
 	<dir name="docs" role="doc">
-	  <file md5sum="2cb222ea90d1dbb425f170e11b9b6ca8">upload_example.php</file>
+	  <file md5sum="8adf937df3cdfcf1f3f55451692c3533">upload_example.php</file>
 	</dir>
       </dir>
     </filelist>

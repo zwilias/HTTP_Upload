@@ -11,30 +11,30 @@
 </body></html>
 <?php
 error_reporting(E_ALL);
-if (!isset($submit)) {
-	exit;
+if (!isset($_GET["submit"])) {
+  exit;
 }
 require 'HTTP/Upload.php';
 echo '<pre>';
-//print_r($HTTP_POST_FILES);
+
 $upload = new http_upload('es');
 $file = $upload->getFiles('userfile');
 if (PEAR::isError($file)) {
-	die ($file->getMessage());
+    die ($file->getMessage());
 }
 if ($file->isValid()) {
-	$file->setName('uniq');
-	$dest_dir = './uploads/';
-	$dest_name = $file->moveTo($dest_dir);
-	if (PEAR::isError($dest_name)) {
-		die ($dest_name->getMessage());
-	}
-	$real = $file->getProp('real');
-	echo "Uploaded $real as $dest_name in $dest_dir\n";
+    $file->setName('uniq');
+    $dest_dir = './uploads/';
+    $dest_name = $file->moveTo($dest_dir);
+    if (PEAR::isError($dest_name)) {
+        die ($dest_name->getMessage());
+    }
+    $real = $file->getProp('real');
+    echo "Uploaded $real as $dest_name in $dest_dir\n";
 } elseif ($file->isMissing()) {
-	echo "No file selected\n";
+    echo "No file selected\n";
 } elseif ($file->isError()) {
-	echo $file->errorMsg() . "\n";
+    echo $file->errorMsg() . "\n";
 }
 print_r($file->getProp());
 echo '</pre>';

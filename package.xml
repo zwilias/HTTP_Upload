@@ -69,6 +69,9 @@ TODO:
 - Move error class to a new file
 - As PEAR in general requires now PHP 4.2, maybe drop BC compat in future
     </notes>
+    <deps>
+      <dep type="pkg" rel="has" optional="no">PEAR</dep>
+    </deps>
     <filelist>
       <dir name="/" baseinstalldir="HTTP">
 	<file role="php" md5sum="c6ca9a2bf44dc9cac1997f401ea18709">Upload.php</file>

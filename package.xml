@@ -28,7 +28,7 @@ from html forms. Features:
   <release>
     <license>LGPL</license>
     <version>0.8</version>
-    <date>2002-1-25</date>
+    <date>2002-O1-25</date>
     <state>stable</state>
     <notes>
 - Fixed compatibility issues with PHP > 4.1

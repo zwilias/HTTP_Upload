@@ -38,11 +38,12 @@ from html forms. Features:
 
   <release>
     <license>LGPL</license>
-    <version>0.9.0</version>
-    <date>2004-08-10</date>
+    <version>0.9.1</version>
+    <date>2004-08-11</date>
     <state>stable</state>
     <notes>**The first release in (exactly!) two years!**
 
+- **Changes between 0.9.0 and 0.9.1: fixed md5 hashes in package.xml!***
 - (antonio) Added support for both PHP >= 4.2 and PHP 4.0-4.1
 - (antonio) Fixed a lot of bugs
 - (antonio, wenz) Fixed some localization strings
@@ -70,7 +71,7 @@ TODO:
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="HTTP">
-	<file role="php" md5sum="16973767c4fcf217e0e2e36d4e2e164f">Upload.php</file>
+	<file role="php" md5sum="c6ca9a2bf44dc9cac1997f401ea18709">Upload.php</file>
 	<dir name="docs" role="doc">
 	  <file md5sum="2cb222ea90d1dbb425f170e11b9b6ca8">upload_example.php</file>
 	</dir>

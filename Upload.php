@@ -89,7 +89,7 @@ class HTTP_Upload_Error extends PEAR
                 ),
             'E_FAIL_COPY' => array(
                 'es' => 'Fallo al copiar el fichero temporal',
-                'en' => 'Failed to copy the temp file',
+                'en' => 'Failed to copy the temporary file',
                 'de' => 'Temporäre Datei konnte nicht kopiert werden'
                 ),
             'FILE_EXISTS' => array(

@@ -318,6 +318,19 @@ class HTTP_Upload extends HTTP_Upload_Error
     var $_chmod = HTTP_UPLOAD_DEFAULT_CHMOD;
 
     /**
+     * Specially used if the naming mode is 'seq'
+	 * Contains file naming information
+     * 
+     * @var array
+     * @access private
+     */
+    var $_modeNameSeq = array(
+        'flag' => false,
+        'prepend' => '',
+        'append' => '',
+    ); 
+
+    /**
      * Constructor
      *
      * @param string $lang Language to use for reporting errors
@@ -559,14 +572,14 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @access private
      * @see HTTP_Upload_File::setValidExtensions()
      */
-    var $_extensions_check = array('php', 'phtm', 'phtml', 'php3', 'inc');
+    var $_extensionsCheck = array('php', 'phtm', 'phtml', 'php3', 'inc');
 
     /**
      * @see HTTP_Upload_File::setValidExtensions()
      * @var string
      * @access private
      */
-    var $_extensions_mode  = 'deny';
+    var $_extensionsMode  = 'deny';
 
     /**
      * Contains the desired chmod for uploaded files
@@ -636,7 +649,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
      * Sets the name of the destination file
      *
-     * @param string $mode     A valid mode: 'uniq', 'safe' or 'real' or a file name
+     * @param string $mode     A valid mode: 'uniq', 'seq', 'safe' or 'real' or a file name
      * @param string $prepend  A string to prepend to the name
      * @param string $append   A string to append to the name
      *
@@ -662,12 +675,57 @@ class HTTP_Upload_File extends HTTP_Upload_Error
             case 'real':
                 $name = $this->upload['real'];
                 break;
+            case 'seq':
+                $this->_modeNameSeq['flag'] = true;
+                $this->_modeNameSeq['prepend'] = $prepend;
+                $this->_modeNameSeq['append'] = $append;
+                break;
             default:
                 $name = $mode;
         }
         $this->upload['name'] = $prepend . $name . $append;
         $this->mode_name_selected = true;
         return $this->upload['name'];
+    }
+
+    /**
+     * Sequence file names in the form: userGuide[1].pdf, userGuide[2].pdf ...
+     *
+     * @param string $dir  Destination directory
+     */
+    function nameToSeq($dir)
+    {
+        //Check if a file with the same name already exists
+        $name = $dir . DIRECTORY_SEPARATOR . $this->upload['name'];
+        if (!@is_file($name)) {
+            return $this->upload['real'];
+        } else {
+            //we need to strip out the extension and the '.' of the file
+            //e.g 'userGuide.pdf' becomes 'userGuide'
+            $baselength = strlen($this->upload['real']) - strlen($this->upload['ext']) - 1;
+            $basename = substr( $this->upload['real'],0, $baselength );
+
+            //here's the pattern we're looking for
+            $pattern = '(\[)([[:digit:]]+)(\])$';
+
+            //just incase the original filename had a sequence, we take it out 
+            // e.g: 'userGuide[3]' should become 'userGuide'
+            $basename =  ereg_replace($pattern, '', $basename);
+        	
+            /*
+             * attempt to find a unique sequence file name
+             */
+            $i = 1;
+        	
+            while (true) {
+                $filename = $basename . '[' . $i . '].' . $this->upload['ext'];
+                $check = $dir . DIRECTORY_SEPARATOR . $filename;
+                if (!@is_file($check)) {
+                    return $filename;
+                }
+                $i++;
+            }
+        }
     }
 
     /**
@@ -749,12 +807,12 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
      * Moves the uploaded file to its destination directory.
      *
-     * @param    string  $dir_dest  Destination directory
-     * @param    bool    $overwrite Overwrite if destination file exists?
-     * @return   mixed   True on success or Pear_Error object on error
+     * @param  string  $dir  Destination directory
+     * @param  bool    $overwrite Overwrite if destination file exists?
+     * @return mixed   True on success or PEAR_Error object on error
      * @access public
      */
-    function moveTo($dir_dest, $overwrite = true)
+    function moveTo($dir, $overwrite = true)
     {
         if (!$this->isValid()) {
             return $this->raiseError($this->upload['error']);
@@ -765,7 +823,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
             return $this->raiseError('NOT_ALLOWED_EXTENSION');
         }
 
-        $err_code = $this->_chk_dir_dest($dir_dest);
+        $err_code = $this->_chkDirDest($dir);
         if ($err_code !== false) {
             return $this->raiseError($err_code);
         }
@@ -774,21 +832,26 @@ class HTTP_Upload_File extends HTTP_Upload_Error
             $this->setName('safe');
         }
 
-        $name_dest = $dir_dest . DIRECTORY_SEPARATOR . $this->upload['name'];
+        //test to see if we're working with sequence naming mode
+        if ($this->_modeNameSeq['flag'] === true) {
+            $this->upload['name'] = $this->_modeNameSeq['prepend'] . $this->nameToSeq($dir_dest) . $this->_modeNameSeq['append'];
+        }
 
-        if (@is_file($name_dest)) {
+        $name = $dir . DIRECTORY_SEPARATOR . $this->upload['name'];
+
+        if (@is_file($name)) {
             if ($overwrite !== true) {
                 return $this->raiseError('FILE_EXISTS');
-            } elseif (!is_writable($name_dest)) {
+            } elseif (!is_writable($name)) {
                 return $this->raiseError('CANNOT_OVERWRITE');
             }
         }
 
         // copy the file and let php clean the tmp
-        if (!@move_uploaded_file($this->upload['tmp_name'], $name_dest)) {
+        if (!@move_uploaded_file($this->upload['tmp_name'], $name)) {
             return $this->raiseError('E_FAIL_MOVE');
         }
-        @chmod($name_dest, $this->_chmod);
+        @chmod($name, $this->_chmod);
         return $this->getProp('name');
     }
 
@@ -798,15 +861,15 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @param    string  $dir_dest Destination dir
      * @return   mixed   False on no errors or error code on error
      */
-    function _chk_dir_dest($dir_dest)
+    function _chkDirDest($dir_dest)
     {
         if (!$dir_dest) {
             return 'MISSING_DIR';
         }
-        if (!@is_dir ($dir_dest)) {
+        if (!@is_dir($dir_dest)) {
             return 'IS_NOT_DIR';
         }
-        if (!is_writeable ($dir_dest)) {
+        if (!is_writeable($dir_dest)) {
             return 'NO_WRITE_PERMS';
         }
         return false;
@@ -860,8 +923,8 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      */
     function setValidExtensions($exts, $mode = 'deny')
     {
-        $this->_extensions_check = $exts;
-        $this->_extensions_mode  = $mode;
+        $this->_extensionsCheck = $exts;
+        $this->_extensionsMode  = $mode;
     }
 
     /**
@@ -872,9 +935,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      */
     function _evalValidExtensions()
     {
-        $exts = $this->_extensions_check;
+        $exts = $this->_extensionsCheck;
         settype($exts, 'array');
-        if ($this->_extensions_mode == 'deny') {
+        if ($this->_extensionsMode == 'deny') {
             if (in_array($this->getProp('ext'), $exts)) {
                 return false;
             }

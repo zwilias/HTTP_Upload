@@ -473,6 +473,7 @@ class HTTP_Upload extends HTTP_Upload_Error
     function isMissing()
     {
         if (count($this->post_files) < 1) {
+            echo 111;
             return $this->raiseError('NO_USER_FILE');
         }
         //we also check if at least one file has more than 0 bytes :)
@@ -485,9 +486,10 @@ class HTTP_Upload extends HTTP_Upload_Error
                 }
             } else {  //one file
                 $size = $value['size'];
+                $error = $value['error'];
             }
         }
-        if ($size == 0) {
+        if ($error != 2 && $size == 0) {
             $this->raiseError('NO_USER_FILE');
         }
         return false;
@@ -576,7 +578,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         $this->HTTP_Upload_Error($lang);
         $ext = null;
 
-        if (empty($name) || $size == 0) {
+        if (empty($name) || ($error != 'TOO_LARGE' && $size == 0)) {
             $error = 'NO_USER_FILE';
         } elseif ($tmp == 'none') {
             $error = 'TOO_LARGE';

@@ -85,7 +85,7 @@ class HTTP_Upload_Error extends PEAR
                 'es' => 'El formulario no contiene METHOD="post" ENCTYPE="multipart/form-data" requerido',
                 'en' => 'The html form doesn\'t contain the required METHOD="post" ENCTYPE="multipart/form-data"',
                 'de' => 'Das HTML-Formular enthält nicht die Angabe METHOD="post" ENCTYPE="multipart/form-data" '.
-                        'im &gt;from&lt;-Tag'
+                        'im &gt;form&lt;-Tag'
                 ),
             'E_FAIL_COPY' => array(
                 'es' => 'Fallo al copiar el fichero temporal',

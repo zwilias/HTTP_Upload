@@ -696,7 +696,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     function nameToSeq($dir)
     {
         //Check if a file with the same name already exists
-        $name = $dir . DIRECTORY_SEPARATOR . $this->upload['name'];
+        $name = $dir . DIRECTORY_SEPARATOR . $this->upload['real'];
         if (!@is_file($name)) {
             return $this->upload['real'];
         } else {
@@ -834,7 +834,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
 
         //test to see if we're working with sequence naming mode
         if ($this->_modeNameSeq['flag'] === true) {
-            $this->upload['name'] = $this->_modeNameSeq['prepend'] . $this->nameToSeq($dir_dest) . $this->_modeNameSeq['append'];
+            $this->upload['name'] = $this->_modeNameSeq['prepend'] . $this->nameToSeq($dir) . $this->_modeNameSeq['append'];
         }
 
         $name = $dir . DIRECTORY_SEPARATOR . $this->upload['name'];

@@ -201,6 +201,8 @@ class HTTP_Upload extends HTTP_Upload_Error
 
 class HTTP_Upload_File extends HTTP_Upload_Error
 {
+    var $_seeded = 0;
+
     /**
     * Assoc array with file properties
     * @var array
@@ -274,7 +276,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     */
     function nameToUniq ()
     {
-        srand((double) microtime() * 1000000);
+        if (! $this->_seeded) {
+            srand((double) microtime() * 1000000);
+            $this->_seeded = 1;
+        }
+
         $uniq = uniqid(rand());
         return $uniq . '.' . $this->nameToSafe($this->upload['ext'],10);
     }

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- do not use the "Type" attribute here, that one is only for
      generated package.xml files -->
-<Package>
-  <Name>HTTP_Uploader</Name>
-  <Summary>Easy and secure managment of files submitted via HTML Forms</Summary>
-  <Maintainer>
-    <Initials>cox</Initials>
-    <Name>Tomas V.V.Cox</Name>
-    <Email>cox@php.net</Email>
-  </Maintainer>
+<package>
+  <name>HTTP_Uploader</name>
+  <summary>Easy and secure managment of files submitted via HTML Forms</summary>
+  <maintainer>
+    <initials>cox</initials>
+    <name>Tomas V.V.Cox</name>
+    <email>cox@php.net</email>
+  </maintainer>
 
-  <Release>
-    <Version>0.6.4</Version>
-    <Date>2001-08-15</Date>
-    <Notes>
+  <release>
+    <version>0.6.4</version>
+    <date>2001-08-15</date>
+    <notes>
 - more safe checks
 - the default file name mode is now 'safe'
 - phpdoc update
 Please use this version if you are using the class
-    </Notes>
-  </Release>
+    </notes>
+  </release>
 
-  <FileList>
-    <Dir Name="/" BaseInstallDir="HTTP">
-        <File Role="php">Upload.php</File>
-        <Dir Name="docs" Role="doc">
-            <File>upload_example.php</File>
-        </Dir>
-    </Dir>
-  </FileList>
-</Package>
+  <filelist>
+    <dir name="/" baseinstalldir="HTTP">
+        <file role="php">Upload.php</file>
+        <dir name="docs" role="doc">
+            <file>upload_example.php</file>
+        </dir>
+    </dir>
+  </filelist>
+</package>

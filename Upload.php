@@ -62,7 +62,7 @@ class HTTP_Upload_Error extends PEAR
      * Whether HTML entities shall be encoded automatically
      * @var boolean
      */
-    var $html = FALSE;
+    var $html = false;
 
     /**
      * Constructor
@@ -72,20 +72,20 @@ class HTTP_Upload_Error extends PEAR
      * @param string $lang The language selected for error code messages
      * @access public
      */
-    function HTTP_Upload_Error($lang = NULL, $html = FALSE)
+    function HTTP_Upload_Error($lang = null, $html = false)
     {
-        $this->lang = ($lang !== NULL) ? $lang : $this->lang;
-        $this->html = ($html !== FALSE) ? $html : $this->html;
+        $this->lang = ($lang !== null) ? $lang : $this->lang;
+        $this->html = ($html !== false) ? $html : $this->html;
         $ini_size = preg_replace('/m/i', '000000', ini_get('upload_max_filesize'));
 
         if (function_exists('version_compare') &&
             version_compare(phpversion(), '4.1', 'ge')) {
             $maxsize = (isset($_POST['MAX_FILE_SIZE'])) ?
-                $_POST['MAX_FILE_SIZE'] : NULL;
+                $_POST['MAX_FILE_SIZE'] : null;
         } else {
             global $HTTP_POST_VARS;
             $maxsize = (isset($HTTP_POST_VARS['MAX_FILE_SIZE'])) ?
-                $HTTP_POST_VARS['MAX_FILE_SIZE'] : NULL;
+                $HTTP_POST_VARS['MAX_FILE_SIZE'] : null;
         }
 
         if (empty($maxsize) || ($maxsize > $ini_size)) {
@@ -275,7 +275,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @see Upload_Error::error_codes
      * @access public
      */
-    function HTTP_Upload($lang = NULL)
+    function HTTP_Upload($lang = null)
     {
         $this->HTTP_Upload_Error($lang);
         if (function_exists('version_compare') &&
@@ -399,7 +399,7 @@ class HTTP_Upload extends HTTP_Upload_Error
                     if (isset($err) && $err !== 0 && isset($uploadError[$err])) {
                         $error = $uploadError[$err];
                     } else {
-                        $error = NULL;
+                        $error = null;
                     }
                     $name = basename($value['name'][$key]);
                     $tmp_name = $value['tmp_name'][$key];
@@ -415,7 +415,7 @@ class HTTP_Upload extends HTTP_Upload_Error
                 if (isset($err) && $err !== 0 && isset($uploadError[$err])) {
                     $error = $uploadError[$err];
                 } else {
-                    $error = NULL;
+                    $error = null;
                 }
                 $name = basename($value['name']);
                 $tmp_name = $value['tmp_name'];
@@ -440,6 +440,21 @@ class HTTP_Upload extends HTTP_Upload_Error
     {
         if (count($this->post_files) < 1) {
             return $this->raiseError('NO_USER_FILE');
+        }
+        //we also check if at least one file has more than 0 bytes :)
+        $files = array();
+        $size = 0;
+        foreach ($this->post_files as $userfile => $value) {
+            if (is_array($value['name'])) {
+                foreach ($value['name'] as $key => $val) {
+                    $size += $value['size'][$key];
+                }
+            } else {  //one file
+                $size = $value['size'];
+            }
+        }
+        if ($size == 0) {
+            $this->raiseError('NO_USER_FILE');
         }
         return false;
     }
@@ -472,7 +487,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * If user haven't selected a mode, by default 'safe' will be used
      * @var boolean
      */
-    var $mode_name_selected = FALSE;
+    var $mode_name_selected = false;
 
     /**
      * It's a common security risk in pages who has the upload dir
@@ -503,19 +518,19 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @param   string  $lang       used language for errormessages
      * @access  public
      */
-    function HTTP_Upload_File($name = NULL, $tmp = NULL,  $formname = NULL,
-                              $type = NULL, $size = NULL, $error = NULL, $lang = NULL)
+    function HTTP_Upload_File($name = null, $tmp = null,  $formname = null,
+                              $type = null, $size = null, $error = null, $lang = null)
     {
         $this->HTTP_Upload_Error($lang);
-        $ext = NULL;
+        $ext = null;
 
-        if (empty($name)) {
+        if (empty($name) || $size == 0) {
             $error = 'NO_USER_FILE';
         } elseif ($tmp == 'none') {
             $error = 'TOO_LARGE';
         } else {
             // strpos needed to detect files without extension
-            if (($pos = strrpos($name, '.')) !== FALSE) {
+            if (($pos = strrpos($name, '.')) !== false) {
                 $ext = substr($name, $pos + 1);
             }
         }
@@ -556,7 +571,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return string The modified name of the destination file
      * @access public
      */
-    function setName($mode, $prepend = NULL, $append = NULL)
+    function setName($mode, $prepend = null, $append = null)
     {
         switch ($mode) {
             case 'uniq':
@@ -566,7 +581,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
                 break;
             case 'safe':
                 $name = $this->nameToSafe($this->upload['real']);
-                if (($pos = strrpos($name, '.')) !== FALSE) {
+                if (($pos = strrpos($name, '.')) !== false) {
                     $this->upload['ext'] = substr($name, $pos + 1);
                 } else {
                     $this->upload['ext'] = '';
@@ -579,7 +594,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
                 $name = $mode;
         }
         $this->upload['name'] = $prepend . $name . $append;
-        $this->mode_name_selected = TRUE;
+        $this->mode_name_selected = true;
         return $this->upload['name'];
     }
 
@@ -624,10 +639,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      */
     function isValid()
     {
-        if ($this->upload['error'] === NULL) {
-            return TRUE;
+        if ($this->upload['error'] === null) {
+            return true;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -639,9 +654,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     function isMissing()
     {
         if ($this->upload['error'] == 'NO_USER_FILE') {
-            return TRUE;
+            return true;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -654,9 +669,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     function isError()
     {
         if (in_array($this->upload['error'], array('TOO_LARGE', 'BAD_FORM','DEV_NO_DEF_FILE'))) {
-            return TRUE;
+            return true;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -667,7 +682,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return   mixed   True on success or Pear_Error object on error
      * @access public
      */
-    function moveTo($dir_dest, $overwrite = TRUE)
+    function moveTo($dir_dest, $overwrite = true)
     {
         if (!$this->isValid()) {
             return $this->raiseError($this->upload['error']);
@@ -679,7 +694,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         }
 
         $err_code = $this->_chk_dir_dest($dir_dest);
-        if ($err_code !== FALSE) {
+        if ($err_code !== false) {
             return $this->raiseError($err_code);
         }
         // Use 'safe' mode by default if no other was selected
@@ -690,7 +705,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         $name_dest = $dir_dest . DIRECTORY_SEPARATOR . $this->upload['name'];
 
         if (@is_file($name_dest)) {
-            if ($overwrite !== TRUE) {
+            if ($overwrite !== true) {
                 return $this->raiseError('FILE_EXISTS');
             } elseif (!is_writable($name_dest)) {
                 return $this->raiseError('CANNOT_OVERWRITE');
@@ -722,7 +737,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         if (!is_writeable ($dir_dest)) {
             return 'NO_WRITE_PERMS';
         }
-        return FALSE;
+        return false;
     }
     /**
      * Retrive properties of the uploaded file
@@ -732,9 +747,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @see HTTP_Upload_File::HTTP_Upload_File()
      * @access public
      */
-    function getProp($name = NULL)
+    function getProp($name = null)
     {
-        if ($name === NULL) {
+        if ($name === null) {
             return $this->upload;
         }
         return $this->upload[$name];
@@ -789,15 +804,15 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         settype($exts, 'array');
         if ($this->_extensions_mode == 'deny') {
             if (in_array($this->getProp('ext'), $exts)) {
-                return FALSE;
+                return false;
             }
         // mode == 'accept'
         } else {
             if (!in_array($this->getProp('ext'), $exts)) {
-                return FALSE;
+                return false;
             }
         }
-        return TRUE;
+        return true;
     }
 }
 ?>

@@ -431,11 +431,8 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     */
     function moveTo ($dir_dest, $overwrite=true)
     {
-        if (OS_WINDOWS) {
-            return $this->raiseError('not tested yet');
-        }
         if (!$this->isValid()) {
-            return $this->raiseError ($this->upload['error']);
+            return $this->raiseError($this->upload['error']);
         }
         $err_code = $this->_chk_dir_dest($dir_dest);
         if ($err_code !== false) {
@@ -445,11 +442,8 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         if (!$this->mode_name_selected) {
             $this->setName('safe');
         }
-        $slash = '';
-        if ($dir_dest[strlen($dir_dest)-1] != '/') {
-            $slash = '/';
-        }
-        $name_dest = $dir_dest . $slash . $this->upload['name'];
+
+        $name_dest = $dir_dest . DIRECTORY_SEPARATOR . $this->upload['name'];
 
         if (@is_file($name_dest)) {
             if ($overwrite !== true) {
@@ -459,10 +453,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
             }
         }
         // Copy the file and let php clean the tmp
-        if (!@copy ($this->upload['tmp_name'], $name_dest)) {
+        if (!@copy($this->upload['tmp_name'], $name_dest)) {
             return $this->raiseError('E_FAIL_MOVE');
         }
-        @chmod ($name_dest, 0660);
+        @chmod($name_dest, 0660);
         return $this->getProp('name');
     }
 

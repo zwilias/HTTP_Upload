@@ -379,10 +379,11 @@ class HTTP_Upload extends HTTP_Upload_Error
             if (PEAR::isError($files)) {
                 // there was an error with the form.
                 // Create a faked upload embedding the error
+                $files_code = $files->getCode();
                 $this->files['_error'] =  &new HTTP_Upload_File(
                                                        '_error', null,
                                                        null, null,
-                                                       null, $files->getCode(),
+                                                       null, $files_code,
                                                        $this->lang, $this->_chmod);
             } else {
                 $this->files = $files;
@@ -427,7 +428,9 @@ class HTTP_Upload extends HTTP_Upload_Error
         if (!isset($this->content_type) ||
             strpos($this->content_type, 'multipart/form-data') !== 0)
         {
-            return $this->raiseError('BAD_FORM');
+            $error = $this->raiseError('BAD_FORM');
+
+            return $error;
         }
         // In 4.1 $_FILES isn't initialized when no uploads
         // XXX (cox) afaik, in >= 4.1 and <= 4.3 only

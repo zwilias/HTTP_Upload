@@ -311,6 +311,13 @@ class HTTP_Upload extends HTTP_Upload_Error
     var $files = array();
     
     /**
+     * Whether the files array has already been built or not
+     * @var int
+     * @access private
+     */
+    var $is_built = false;
+
+    /**
      * Contains the desired chmod for uploaded files
      * @var int
      * @access private
@@ -372,9 +379,8 @@ class HTTP_Upload extends HTTP_Upload_Error
      */
     function &getFiles($file = null)
     {
-        static $is_built = false;
         //build only once for multiple calls
-        if (!$is_built) {
+        if (!$this->is_built) {
             $files = &$this->_buildFiles();
             if (PEAR::isError($files)) {
                 // there was an error with the form.
@@ -388,7 +394,7 @@ class HTTP_Upload extends HTTP_Upload_Error
             } else {
                 $this->files = $files;
             }
-            $is_built = true;
+            $this->is_built = true;
         }
         if ($file !== null) {
             if (is_int($file)) {

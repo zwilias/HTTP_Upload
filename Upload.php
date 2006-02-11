@@ -413,11 +413,12 @@ class HTTP_Upload extends HTTP_Upload_Error
             } else {
                 // developer didn't specify this name in the form
                 // warn him about it with a faked upload
-                return new HTTP_Upload_File(
-                                           '_error', null,
-                                           null, null,
-                                           null, 'DEV_NO_DEF_FILE',
-                                           $this->lang);
+                $huf =&  new HTTP_Upload_File(
+                                             '_error', null,
+                                             null, null,
+                                             null, 'DEV_NO_DEF_FILE',
+                                             $this->lang);
+                return $huf;
             }
         }
         return $this->files;
@@ -434,8 +435,7 @@ class HTTP_Upload extends HTTP_Upload_Error
         if (!isset($this->content_type) ||
             strpos($this->content_type, 'multipart/form-data') !== 0)
         {
-            $error = $this->raiseError('BAD_FORM');
-
+            $error =& $this->raiseError('BAD_FORM');
             return $error;
         }
         // In 4.1 $_FILES isn't initialized when no uploads
@@ -510,7 +510,8 @@ class HTTP_Upload extends HTTP_Upload_Error
     function isMissing()
     {
         if (count($this->post_files) < 1) {
-            return $this->raiseError('NO_USER_FILE');
+            $error =& $this->raiseError('NO_USER_FILE');
+            return $error;
         }
         //we also check if at least one file has more than 0 bytes :)
         $files = array();
@@ -528,7 +529,8 @@ class HTTP_Upload extends HTTP_Upload_Error
             }
         }
         if ($error != 2 && $size == 0) {
-            return $this->raiseError('NO_USER_FILE');
+            $error =& $this->raiseError('NO_USER_FILE');
+            return $error;
         }
         return false;
     }
@@ -824,17 +826,20 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     function moveTo($dir, $overwrite = true)
     {
         if (!$this->isValid()) {
-            return $this->raiseError($this->upload['error']);
+            $error =& $this->raiseError($this->upload['error']);
+            return $error;
         }
 
         //Valid extensions check
         if (!$this->_evalValidExtensions()) {
-            return $this->raiseError('NOT_ALLOWED_EXTENSION');
+            $error =& $this->raiseError('NOT_ALLOWED_EXTENSION');
+            return $error;
         }
 
         $err_code = $this->_chkDirDest($dir);
         if ($err_code !== false) {
-            return $this->raiseError($err_code);
+            $error =& $this->raiseError($err_code);
+            return $error;
         }
         // Use 'safe' mode by default if no other was selected
         if (!$this->mode_name_selected) {
@@ -850,18 +855,22 @@ class HTTP_Upload_File extends HTTP_Upload_Error
 
         if (@is_file($name)) {
             if ($overwrite !== true) {
-                return $this->raiseError('FILE_EXISTS');
+                $error =& $this->raiseError('FILE_EXISTS');
+                return $error;
             } elseif (!is_writable($name)) {
-                return $this->raiseError('CANNOT_OVERWRITE');
+                $error =& $this->raiseError('CANNOT_OVERWRITE');
+                return $error;
             }
         }
 
         // copy the file and let php clean the tmp
         if (!@move_uploaded_file($this->upload['tmp_name'], $name)) {
-            return $this->raiseError('E_FAIL_MOVE');
+            $error =& $this->raiseError('E_FAIL_MOVE');
+            return &error; 
         }
         @chmod($name, $this->_chmod);
-        return $this->getProp('name');
+        $prop =& $this->getProp('name');
+        return $prop;
     }
 
     /**

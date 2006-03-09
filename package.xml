@@ -38,43 +38,21 @@ from html forms. Features:
 
   <release>
     <license>LGPL</license>
-    <version>0.9.1</version>
-    <date>2004-08-11</date>
+    <version>0.9.2</version>
+    <date>2006-03-09</date>
     <state>stable</state>
-    <notes>**The first release in (exactly!) two years!**
-
-- **Changes between 0.9.0 and 0.9.1: fixed md5 hashes in package.xml!***
-- (antonio) Added support for both PHP >= 4.2 and PHP 4.0-4.1
-- (antonio) Fixed a lot of bugs
-- (antonio, wenz) Fixed some localization strings
-- (wenz) if only empty files are uploaded, an error message 
-  is triggered 
-- (wenz) added setChmod() method to change CHMOD of uploaded files (patch by Markus Tacker) 
-- (cox, antonio, wenz) many minor fixes
-- (cox) Error detection was enhanced, so you no longer need to
-  check for PEAR::isError() in $upload->getFiles() or call
-  $upload->isMissing(). Instead you'll
-  get the error when do a check for $file->isError().
-
-  Example:
-
-   $upload = new HTTP_Upload('en');
-   $file = $upload->getFiles('i_dont_exist_in_form_definition');
-   if ($file->isError()) {
-      die($file->getMessage());
-   }
+    <notes>Finally, a new interim release. Several bugs have been fixed, including the well-known "pass by reference" issues.
 
 TODO:
-
 - Move error class to a new file
-- As PEAR in general requires now PHP 4.2, maybe drop BC compat in future
+- As PEAR in general requires PHP 4.2, drop BC compat in the soon future
     </notes>
     <deps>
       <dep type="pkg" rel="has" optional="no">PEAR</dep>
     </deps>
     <filelist>
       <dir name="/" baseinstalldir="HTTP">
-	<file role="php" md5sum="c6ca9a2bf44dc9cac1997f401ea18709">Upload.php</file>
+	<file role="php" md5sum="03cddbd51121270e763de9affd3fbce0">Upload.php</file>
 	<dir name="docs" role="doc">
 	  <file md5sum="8adf937df3cdfcf1f3f55451692c3533">upload_example.php</file>
 	</dir>

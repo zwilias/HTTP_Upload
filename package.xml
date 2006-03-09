@@ -52,11 +52,11 @@ TODO:
     </deps>
     <filelist>
       <dir name="/" baseinstalldir="HTTP">
-	<file role="php" md5sum="03cddbd51121270e763de9affd3fbce0">Upload.php</file>
-	<dir name="docs" role="doc">
-	  <file md5sum="8adf937df3cdfcf1f3f55451692c3533">upload_example.php</file>
-	</dir>
+        <file role="php" md5sum="03cddbd51121270e763de9affd3fbce0">Upload.php</file>
       </dir>
+	    <dir name="docs" role="doc">
+	      <file md5sum="8adf937df3cdfcf1f3f55451692c3533">upload_example.php</file>
+	    </dir>
     </filelist>
   </release>
 </package>

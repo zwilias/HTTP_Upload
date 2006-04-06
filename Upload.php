@@ -866,7 +866,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         // copy the file and let php clean the tmp
         if (!@move_uploaded_file($this->upload['tmp_name'], $name)) {
             $error =& $this->raiseError('E_FAIL_MOVE');
-            return &error; 
+            return $error; 
         }
         @chmod($name, $this->_chmod);
         $prop =& $this->getProp('name');

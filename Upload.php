@@ -441,7 +441,8 @@ class HTTP_Upload extends HTTP_Upload_Error
         // In 4.1 $_FILES isn't initialized when no uploads
         // XXX (cox) afaik, in >= 4.1 and <= 4.3 only
         if (function_exists('version_compare') &&
-            version_compare(phpversion(), '4.1', 'ge'))
+            version_compare(PHP_VERSION, '4.1', 'ge') &&
+            version_compare(PHP_VERSION, '4.4', 'lt'))
         {
             $error = $this->isMissing();
             if (PEAR::isError($error)) {

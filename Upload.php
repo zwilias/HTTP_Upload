@@ -326,7 +326,7 @@ class HTTP_Upload extends HTTP_Upload_Error
 
     /**
      * Specially used if the naming mode is 'seq'
-	 * Contains file naming information
+     * Contains file naming information
      * 
      * @var array
      * @access private
@@ -439,10 +439,10 @@ class HTTP_Upload extends HTTP_Upload_Error
             return $error;
         }
         // In 4.1 $_FILES isn't initialized when no uploads
-        // XXX (cox) afaik, in >= 4.1 and <= 4.3 only
+        // XXX (cox) afaik, in >= 4.1 and < 4.3 only
         if (function_exists('version_compare') &&
             version_compare(PHP_VERSION, '4.1', 'ge') &&
-            version_compare(PHP_VERSION, '4.4', 'lt'))
+            version_compare(PHP_VERSION, '4.3', 'lt'))
         {
             $error = $this->isMissing();
             if (PEAR::isError($error)) {
@@ -848,7 +848,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         }
 
         //test to see if we're working with sequence naming mode
-        if ($this->_modeNameSeq['flag'] === true) {
+        if (isset($this->_modeNameSeq) && isset($this->_modeNameSeq['flag']) && $this->_modeNameSeq['flag'] === true) {
             $this->upload['name'] = $this->_modeNameSeq['prepend'] . $this->nameToSeq($dir) . $this->_modeNameSeq['append'];
         }
 

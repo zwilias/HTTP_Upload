@@ -524,8 +524,8 @@ class HTTP_Upload extends HTTP_Upload_Error
                 foreach ($value['name'] as $key => $val) {
                     $size += $value['size'][$key];
                 }
-            } else {  //one file
-                $size = $value['size'];
+            } elseif (!empty($value['name'])) {  //one file
+                $size += $value['size'];
                 $error = $value['error'];
             }
         }

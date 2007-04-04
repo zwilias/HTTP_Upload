@@ -594,6 +594,14 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     var $_extensionsMode  = 'deny';
 
     /**
+     * Whether to use case-sensitive extension checks or not
+     * @see HTTP_Upload_File::setValidExtensions()
+     * @var bool
+     * @access private
+     */
+     var $_extensionsCaseSensitive = true;
+
+    /**
      * Contains the desired chmod for uploaded files
      * @var int
      * @access private
@@ -938,12 +946,16 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      *                       1) 'deny'   Will deny only the supplied extensions
      *                       2) 'accept' Will accept only the supplied extensions
      *                                   as valid
+     * @param bool $case_sensitive whether extension check is case sensitive.
      * @access public
      */
-    function setValidExtensions($exts, $mode = 'deny')
+    function setValidExtensions($exts, $mode = 'deny', $case_sensitive = null)
     {
         $this->_extensionsCheck = $exts;
         $this->_extensionsMode  = $mode;
+        if ($case_sensitive != null) {
+            $this->_extensionsCaseSensitive  = $case_sensitive;
+        }
     }
 
     /**
@@ -956,13 +968,17 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     {
         $exts = $this->_extensionsCheck;
         settype($exts, 'array');
+        $ext = $this->getProp('ext');
+        if (!$this->_extensionsCaseSensitive) {
+            $ext = strtolower($ext);
+        }
         if ($this->_extensionsMode == 'deny') {
-            if (in_array($this->getProp('ext'), $exts)) {
+            if (in_array($ext, $exts)) {
                 return false;
             }
         // mode == 'accept'
         } else {
-            if (!in_array($this->getProp('ext'), $exts)) {
+            if (!in_array($ext, $exts)) {
                 return false;
             }
         }

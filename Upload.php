@@ -529,7 +529,7 @@ class HTTP_Upload extends HTTP_Upload_Error
                 $error = $value['error'];
             }
         }
-        if ($error != 2 && $size == 0) {
+        if ($error !== null && $error != 2 && $size == 0) {
             $error =& $this->raiseError('NO_USER_FILE');
             return $error;
         }

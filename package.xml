@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
 <!-- do not use the "Type" attribute here, that one is only for
      generated package.xml files -->
@@ -30,7 +30,7 @@ from html forms. Features:
     </maintainer>
     <maintainer>
       <user>antonio</user>
-      <name>Ant&ocirc;nio Carlos Ven&acirc;ncio J&uacute;nior</name>
+      <name>Antônio Carlos Venâncio Júnior</name>
       <email>antonio@php.net</email>
       <role>lead</role>
     </maintainer>

@@ -1,10 +1,12 @@
-<?php // ********************************************** // // This software is 
-licensed by the LGPL // -> http://www.gnu.org/copyleft/lesser.txt // (c) 2001-
-2004 by Tomas Von Veschler Cox // // 
-********************************************** // // $Id: Upload.php,v 1.59 
-2007/04/04 16:58:37 wenz Exp $
+<?php
+// ********************************************** //
+// This software is licensed by the LGPL
+// -> http://www.gnu.org/copyleft/lesser.txt 
+// (c) 2001- 2004 by Tomas Von Veschler Cox //
+// ********************************************** //
+ // $Id$
 
-/*
+/**
  * Pear File Uploader class. Easy and secure managment of files
  * submitted via HTML Forms.
  *

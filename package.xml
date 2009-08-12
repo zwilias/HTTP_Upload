@@ -67,7 +67,7 @@ QA release because of the sheer number of closed bugs:
 - Fix bug #2950: Addition of chars in nameToSafe [wenz]
 - Fix bug #3624: CRITICAL: non-ISO-8859-1 characters in package.xml must be entitied [cweiske]
 - Fix bug #4318: file extension checking should not be case-sensitive [wenz]
-- Fix bug #4332: problem when using 2 instance of HTTP_Upload & 2 files [wenz]
+- Fix bug #4332: problem when using 2 instance of HTTP_Upload &amp; 2 files [wenz]
 - Fix bug #4441: inaccurate error when uploading large file [antonio]
 - Fix bug #4995: missing return statement [wenz]
 - Fix bug #5536: No explanation of properties [wenz]

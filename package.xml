@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
-<!-- do not use the "Type" attribute here, that one is only for
-     generated package.xml files -->
-<package version="1.0">
-  <name>HTTP_Upload</name>
-  <summary>Easy and secure managment of files submitted via HTML Forms</summary>
-  <description>This class provides an advanced file uploader system for file uploads made
+<package version="2.0"
+ xmlns="http://pear.php.net/dtd/package-2.0"
+ xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+  http://pear.php.net/dtd/tasks-1.0.xsd
+  http://pear.php.net/dtd/package-2.0
+  http://pear.php.net/dtd/package-2.0.xsd"
+>
+ <name>HTTP_Upload</name>
+ <channel>pear.php.net</channel>
+ <summary>Easy and secure managment of files submitted via HTML Forms</summary>
+ <description>
+This class provides an advanced file uploader system for file uploads made
 from html forms. Features:
  * Can handle from one file to multiple files.
  * Safe file copying from tmp dir.
@@ -14,49 +21,96 @@ from html forms. Features:
  * Rename uploaded files in different ways: as it is, safe or unique
  * Validate allowed file extensions
  * Multiple languages error messages support (es, en, de, fr, it, nl, pt_BR)
-  </description>
-  <maintainers>
-    <maintainer>
-      <user>cox</user>
-      <name>Tomas V.V.Cox</name>
-      <email>cox@idecnet.com</email>
-      <role>lead</role>
-    </maintainer>
-    <maintainer>
-      <user>wenz</user>
-      <name>Christian Wenz</name>
-      <email>wenz@php.net</email>
-      <role>lead</role>
-    </maintainer>
-    <maintainer>
-      <user>antonio</user>
-      <name>Antônio Carlos Venâncio Júnior</name>
-      <email>antonio@php.net</email>
-      <role>lead</role>
-    </maintainer>
-  </maintainers>
+ </description>
 
-  <release>
-    <license>LGPL</license>
-    <version>0.9.2</version>
-    <date>2006-03-09</date>
-    <state>stable</state>
-    <notes>Finally, a new interim release. Several bugs have been fixed, including the well-known "pass by reference" issues.
+ <lead>
+  <name>Tomas V.V.Cox</name>
+  <user>cox</user>
+  <email>cox@idecnet.com</email>
+  <active>no</active>
+ </lead>
+ <lead>
+  <name>Christian Wenz</name>
+  <user>wenz</user>
+  <email>wenz@php.net</email>
+  <active>no</active>
+ </lead>
+ <lead>
+  <name>Antônio Carlos Venâncio Júnior</name>
+  <user>antonio</user>
+  <email>antonio@php.net</email>
+  <active>no</active>
+ </lead>
 
-TODO:
-- Move error class to a new file
-- As PEAR in general requires PHP 4.2, drop BC compat in the soon future
-    </notes>
-    <deps>
-      <dep type="pkg" rel="has" optional="no">PEAR</dep>
-    </deps>
-    <filelist>
-      <dir name="/" baseinstalldir="HTTP">
-        <file role="php" md5sum="03cddbd51121270e763de9affd3fbce0">Upload.php</file>
-      </dir>
-	    <dir name="docs" role="doc">
-	      <file md5sum="8adf937df3cdfcf1f3f55451692c3533">upload_example.php</file>
-	    </dir>
-    </filelist>
-  </release>
+ <date>2009-08-12</date>
+ <time>21:51:06</time>
+
+ <version>
+  <release>1.0.0b1</release>
+  <api>1.0.0b1</api>
+ </version>
+
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+
+ <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+
+ <notes>
+QA release because of the sheer number of closed bugs:
+- Fix bug #2108: PEAR::Installer fails with bad MD5-sum [wenz]
+- Fix bug #2251: Wrong error message if file is larger than MAX_FILE_SIZE [antonio]
+- Fix bug #2291: typo in example and wrong return result of _evalValidExtensions() [antonio]
+- Fix bug #2383: Notice: Undefined variable: error in C:\php5\PEAR\HTTP\Upload.php on line 509 [antonio]
+- Fix bug #2949: Missing PEAR dep [wenz]
+- Fix bug #2950: Addition of chars in nameToSafe [wenz]
+- Fix bug #3624: CRITICAL: non-ISO-8859-1 characters in package.xml must be entitied [cweiske]
+- Fix bug #4318: file extension checking should not be case-sensitive [wenz]
+- Fix bug #4332: problem when using 2 instance of HTTP_Upload & 2 files [wenz]
+- Fix bug #4441: inaccurate error when uploading large file [antonio]
+- Fix bug #4995: missing return statement [wenz]
+- Fix bug #5536: No explanation of properties [wenz]
+- Fix bug #6678: Missing return statement in HTTP_Upload::isMissing() [wenz]
+- Fix bug #6752: 'Only variable references should be returned by reference' PHP notice [wenz]
+- Fix bug #6884: translations: Estonian and Russian [wenz]
+- Fix bug #6886: typo in code [arnaud]
+- Fix bug #7092: PHP5 notice Only variable references should be returned by reference [wenz]
+- Fix bug #7322: small parse error [wenz]
+- Fix bug #7499: Error in HTTP_Upload::isMissing() on determining uploaded files [wenz]
+- Fix bug #7861: Filenames with spaces in them get their names changed when being moved [cweiske]
+- Fix bug #8656: getFiles() generate error if one of uploaded files haven't been selected [wenz]
+- Fix bug #8658: Notice: Undefined property: _modeNameSeq in Upload.php on line 860 [wenz]
+- Fix bug #14677: Security issue due to seeding random number generator [wenz]
+- Fix bug #15003: Parse error in Upload.php [doconnor]
+ </notes>
+
+ <contents>
+  <dir name="/">
+   <dir name="docs">
+    <file name="upload_example.php" role="doc" />
+   </dir> <!-- //docs -->
+   <dir name="HTTP">
+    <file name="Upload.php" role="php" />
+   </dir>
+  </dir> <!-- / -->
+ </contents>
+
+ <dependencies>
+  <required>
+   <php>
+    <min>4.0.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+   <package>
+    <name>PEAR</name>
+    <channel>pear.php.net</channel>
+   </package>
+  </required>
+ </dependencies>
+
+ <phprelease />
+
 </package>

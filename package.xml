@@ -42,7 +42,7 @@ from html forms. Features:
   <active>no</active>
  </lead>
 
- <date>2009-08-12</date>
+ <date>2009-08-13</date>
  <time>21:51:06</time>
 
  <version>
@@ -83,6 +83,8 @@ QA release because of the sheer number of closed bugs:
 - Fix bug #8658: Notice: Undefined property: _modeNameSeq in Upload.php on line 860 [wenz]
 - Fix bug #14677: Security issue due to seeding random number generator [wenz]
 - Fix bug #15003: Parse error in Upload.php [doconnor]
+- Detect ini file sizes with kilo- and gigabytes [avb]
+- Convert russian translation to HTML entities [avb]
  </notes>
 
  <contents>

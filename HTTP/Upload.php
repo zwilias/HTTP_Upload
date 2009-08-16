@@ -509,9 +509,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         $this->HTTP_Upload_Error($lang);
         $ext = null;
 
-        if (empty($name) || ($error != 'TOO_LARGE' && $size == 0)) {
+        if (empty($name)
+            || ($error != 'TOO_LARGE' && $error != 'DEV_NO_DEF_FILE' && $size == 0)
+        ) {
             $error = 'NO_USER_FILE';
-        } elseif ($tmp == 'none') {
+        } elseif ($tmp == 'none' || $name == '_error' && $error == 'DEV_NO_DEF_FILE') {
             $error = 'TOO_LARGE';
         } else {
             // strpos needed to detect files without extension

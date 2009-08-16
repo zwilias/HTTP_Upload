@@ -4,7 +4,7 @@
 // -> http://www.gnu.org/copyleft/lesser.txt 
 // (c) 2001- 2004 by Tomas Von Veschler Cox //
 // ********************************************** //
- // $Id$
+// $Id$
 
 /**
  * Pear File Uploader class. Easy and secure managment of files
@@ -99,190 +99,10 @@ class HTTP_Upload_Error extends PEAR
         if (empty($maxsize) || ($maxsize > $ini_size)) {
             $maxsize = $ini_size;
         }
-        // XXXXX Add here error messages in your language
-        $this->error_codes = array(
-            'TOO_LARGE' => array(
-                'es'    => "Fichero demasiado largo. El maximo permitido es: $maxsize bytes.",
-                'en'    => "File size too large. The maximum permitted size is: $maxsize bytes.",
-                'et'    => "Fail on liiga suur. Maksimaalne lubatud suurus on $maxsize baiti.",
-                'de'    => "Datei zu gro&szlig;. Die zul&auml;ssige Maximalgr&ouml;&szlig;e ist: $maxsize Bytes.",
-                'nl'    => "Het bestand is te groot, de maximale grootte is: $maxsize bytes.",
-                'fr'    => "Le fichier est trop gros. La taille maximum autoris&eacute;e est: $maxsize bytes.",
-                'it'    => "Il file &eacute; troppo grande. Il massimo permesso &eacute: $maxsize bytes.",
-                'pt_BR' => "Arquivo muito grande. O tamanho m&aacute;ximo permitido &eacute; $maxsize bytes.",
-                'ru'    => "&#x424;&#x430;&#x439;&#x43b; &#x441;&#x43b;&#x438;&#x448;&#x43a;&#x43e;&#x43c; &#x432;&#x435;&#x43b;&#x438;&#x43a;. &#x41c;&#x430;&#x43a;&#x441;&#x438;&#x43c;&#x430;&#x43b;&#x44c;&#x43d;&#x44b;&#x439; &#x440;&#x430;&#x437;&#x440;&#x435;&#x448;&#x451;&#x43d;&#x43d;&#x44b;&#x439; &#x43e;&#x431;&#x44a;&#x451;&#x43c;: $maxsize &#x431;&#x430;&#x439;&#x442;.",
-                'sv'    => "Filen &auml;r f&ouml;r stor. St&ouml;rsta till&aring;tna filstorlek &auml;r: $maxsize bytes.",
-                'da'    => "Filen er for stor. St&oslash;rste tilladte filst&oslash;rrelse er : $maxsize bytes."
-                ),
-            'MISSING_DIR' => array(
-                'es'    => 'Falta directorio destino.',
-                'en'    => 'Missing destination directory.',
-                'et'    => 'Puudub sihtkataloog.',
-                'de'    => 'Kein Zielverzeichnis definiert.',
-                'nl'    => 'Geen bestemmings directory.',
-                'fr'    => 'Le r&eacute;pertoire de destination n\'est pas d&eacute;fini.',
-                'it'    => 'Manca la directory di destinazione.',
-                'pt_BR' => 'Aus&ecirc;ncia de diret&oacute;rio de destino.',
-                'ru'    => '&#x41d;&#x435; &#x443;&#x43a;&#x430;&#x437;&#x430;&#x43d; &#x446;&#x435;&#x43b;&#x435;&#x432;&#x43e;&#x439; &#x43a;&#x430;&#x442;&#x430;&#x43b;&#x43e;&#x433;.',
-                'sv'    => 'Saknar destinationskatalog.',
-                'da'    => 'Mangler destinationskatalog.'
-),
-            'IS_NOT_DIR' => array(
-                'es'    => 'El directorio destino no existe o es un fichero regular.',
-                'en'    => 'The destination directory doesn\'t exist or is a regular file.',
-                'et'    => 'Sihtkataloogi pole olemas v&otilde;i ta on tavaline fail.',
-                'de'    => 'Das angebene Zielverzeichnis existiert nicht oder ist eine Datei.',
-                'nl'    => 'De doeldirectory bestaat niet, of is een gewoon bestand.',
-                'fr'    => 'Le r&eacute;pertoire de destination n\'existe pas ou il s\'agit d\'un fichier r&eacute;gulier.',
-                'it'    => 'La directory di destinazione non esiste o &eacute; un file.',
-                'pt_BR' => 'O diret&oacute;rio de destino n&atilde;o existe ou &eacute; um arquivo.',
-                'ru'    => '&#x426;&#x435;&#x43b;&#x435;&#x432;&#x43e;&#x439; &#x43a;&#x430;&#x442;&#x430;&#x43b;&#x43e;&#x433; &#x43d;&#x435; &#x441;&#x443;&#x449;&#x435;&#x441;&#x442;&#x432;&#x443;&#x435;&#x442; &#x438;&#x43b;&#x438; &#x44f;&#x432;&#x43b;&#x44f;&#x435;&#x442;&#x441;&#x44f; &#x43e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x43c; &#x444;&#x430;&#x439;&#x43b;&#x43e;&#x43c;.',
-                'sv'    => 'Destinationskatalogen existerar inte, eller &auml;r en vanlig fil.',
-                'da'    => 'Destinationskatalogen eksisterer ikke, eller er en almindelig fil.'
-                ),
-            'NO_WRITE_PERMS' => array(
-                'es'    => 'El directorio destino no tiene permisos de escritura.',
-                'en'    => 'The destination directory doesn\'t have write perms.',
-                'et'    => 'Valitud kataloogi ei saa kirjutada.',
-                'de'    => 'Fehlende Schreibrechte f&uuml;r das Zielverzeichnis.',
-                'nl'    => 'Geen toestemming om te schrijven in de doeldirectory.',
-                'fr'    => 'Le r&eacute;pertoire de destination n\'a pas les droits en &eacute;criture.',
-                'it'    => 'Non si hanno i permessi di scrittura sulla directory di destinazione.',
-                'pt_BR' => 'O diret&oacute;rio de destino n&atilde;o possui permiss&atilde;o para escrita.',
-                'ru'    => '&#x41d;&#x435;&#x442; &#x43f;&#x440;&#x430;&#x432; &#x43d;&#x430; &#x437;&#x430;&#x43f;&#x438;&#x441;&#x44c; &#x432; &#x446;&#x435;&#x43b;&#x435;&#x432;&#x43e;&#x439; &#x43a;&#x430;&#x442;&#x430;&#x43b;&#x43e;&#x433;.',
-                'sv'    => 'Destinationskatalogen har inte skrivr&auml;ttigheter.',
-                'da'    => 'Destinationskatalogen har ikke skrivrettigheder.'
-                ),
-            'NO_USER_FILE' => array(
-                'es'    => 'No se ha escogido fichero para el upload.',
-                'en'    => 'You haven\'t selected any file for uploading.',
-                'et'    => '&Uuml;leslaetav fail j&auml;i valimata.',
-                'de'    => 'Es wurde keine Datei f&uuml;r den Upload ausgew&auml;hlt.',
-                'nl'    => 'Er is geen bestand opgegeven om te uploaden.',
-                'fr'    => 'Vous n\'avez pas s&eacute;lectionn&eacute; de fichier &agrave; envoyer.',
-                'it'    => 'Nessun file selezionato per l\'upload.',
-                'pt_BR' => 'Nenhum arquivo selecionado para upload.',
-                'ru'    => '&#x412;&#x44b; &#x43d;&#x435; &#x432;&#x44b;&#x431;&#x440;&#x430;&#x43b;&#x438; &#x444;&#x430;&#x439;&#x43b; &#x434;&#x43b;&#x44f; &#x437;&#x430;&#x433;&#x440;&#x443;&#x437;&#x43a;&#x438;.',
-                'sv'    => 'Du har inte valt n&aring;gon fil att ladda upp.',
-                'da'    => 'Du har ikke valgt nogen fil at uploade.'
-                ),
-            'BAD_FORM' => array(
-                'es'    => 'El formulario no contiene method="post" enctype="multipart/form-data" requerido.',
-                'en'    => 'The html form doesn\'t contain the required method="post" enctype="multipart/form-data".',
-                'et'    => 'Html-vorm ei sisalda n&otilde;utud method="post" enctype="multipart/form-data".',
-                'de'    => 'Das HTML-Formular enth&auml;lt nicht die Angabe method="post" enctype="multipart/form-data" '.
-                           'im &gt;form&lt;-Tag.',
-                'nl'    => 'Het HTML-formulier bevat niet de volgende benodigde '.
-                           'eigenschappen: method="post" enctype="multipart/form-data".',
-                'fr'    => 'Le formulaire HTML ne contient pas les attributs requis : '.
-                           ' method="post" enctype="multipart/form-data".',
-                'it'    => 'Il modulo HTML non contiene gli attributi richiesti: "'.
-                           ' method="post" enctype="multipart/form-data".',
-                'pt_BR' => 'O formul&aacute;rio HTML n&atilde;o possui o method="post" enctype="multipart/form-data" requerido.',
-                'ru'    => '&#x412; &#x444;&#x43e;&#x440;&#x43c;&#x435; HTML &#x43d;&#x435; &#x443;&#x43a;&#x430;&#x437;&#x430;&#x43d;&#x44b; &#x43d;&#x435;&#x43e;&#x431;&#x445;&#x43e;&#x434;&#x438;&#x43c;&#x44b;&#x435; &#x430;&#x442;&#x440;&#x438;&#x431;&#x443;&#x442;&#x44b;: method="post" enctype="multipart/form-data".',
-                'sv'    => 'HTML-formul&auml;ret inneh&aring;ller inte de attribut som kr&auml;vs: '.
-                        ' method="post" enctype="multipart/form-data"',
-                'da'    => 'HTML-formularen mangler disse indstillinger: '.
-                        ' method="post" enctype="multipart/form-data"'
-                ),
-            'E_FAIL_COPY' => array(
-                'es'    => 'Fallo al copiar el fichero temporal.',
-                'en'    => 'Failed to copy the temporary file.',
-                'de'    => 'Tempor&auml;re Datei konnte nicht kopiert werden.',
-                'et'    => 'Ajutise faili kopeerimine eba&otilde;nnestus.',
-                'nl'    => 'Het tijdelijke bestand kon niet gekopieerd worden.',
-                'fr'    => 'L\'enregistrement du fichier temporaire a &eacute;chou&eacute;.',
-                'it'    => 'Copia del file temporaneo fallita.',
-                'pt_BR' => 'Falha ao copiar o arquivo tempor&aacute;rio.',
-                'ru'    => '&#x41d;&#x435; &#x443;&#x434;&#x430;&#x43b;&#x43e;&#x441;&#x44c; &#x441;&#x43a;&#x43e;&#x43f;&#x438;&#x440;&#x43e;&#x432;&#x430;&#x442;&#x44c; &#x432;&#x440;&#x435;&#x43c;&#x435;&#x43d;&#x43d;&#x44b;&#x439; &#x444;&#x430;&#x439;&#x43b;.',
-                'sv'    => 'Misslyckades med att kopiera den tempor&auml;ra filen.',
-                'da'    => 'Det lykkedes ikke at kopiere den tempor&aelig;re fil.'
-                ),
-            'E_FAIL_MOVE' => array(
-                'es'    => 'No puedo mover el fichero.',
-                'en'    => 'Impossible to move the file.',
-                'et'    => 'Faili asukohta ei saa muuta.',
-                'de'    => 'Datei kann nicht verschoben werden.',
-                'nl'    => 'Het bestand kon niet verplaatst worden.',
-                'fr'    => 'Impossible de d&eacute;placer le fichier.',
-                'pt_BR' => 'N&atilde;o foi poss&iacute;vel mover o arquivo.',
-                'ru'    => '&#x41d;&#x435; &#x443;&#x434;&#x430;&#x43b;&#x43e;&#x441;&#x44c; &#x43f;&#x435;&#x440;&#x435;&#x43c;&#x435;&#x441;&#x442;&#x438;&#x442;&#x44c; &#x444;&#x430;&#x439;&#x43b;',
-                'sv'    => 'Misslyckades med att flytta den tempor&auml;ra filen.',
-                'da'    => 'Det lykkedes ikke at flytta den tempor&aelig;re fil.'
-                ),
-            'FILE_EXISTS' => array(
-                'es'    => 'El fichero destino ya existe.',
-                'en'    => 'The destination file already exists.',
-                'et'    => 'Sihtfail on juba olemas.',
-                'de'    => 'Die zu erzeugende Datei existiert bereits.',
-                'nl'    => 'Het doelbestand bestaat al.',
-                'fr'    => 'Le fichier de destination existe d&eacute;j&agrave;.',
-                'it'    => 'File destinazione gi&agrave; esistente.',
-                'pt_BR' => 'O arquivo de destino j&aacute; existe.',
-                'ru'    => '&#x426;&#x435;&#x43b;&#x435;&#x432;&#x43e;&#x439; &#x444;&#x430;&#x439;&#x43b; &#x443;&#x436;&#x435; &#x441;&#x443;&#x449;&#x435;&#x441;&#x442;&#x432;&#x443;&#x435;&#x442;.',
-                'sv'    => 'Destinationsfilen existerar redan.',
-                'da'    => 'Destinationsfilen findes allerede.'
-                ),
-            'CANNOT_OVERWRITE' => array(
-                'es'    => 'El fichero destino ya existe y no se puede sobreescribir.',
-                'en'    => 'The destination file already exists and could not be overwritten.',
-                'de'    => 'Die zu erzeugende Datei existiert bereits und konnte nicht &uuml;berschrieben werden.',
-                'et'    => 'Sihtfail on juba olemas. Seda ei saa &uuml;le kirjutada.',
-                'nl'    => 'Het doelbestand bestaat al, en kon niet worden overschreven.',
-                'fr'    => 'Le fichier de destination existe d&eacute;j&agrave; et ne peux pas &ecirc;tre remplac&eacute;.',
-                'it'    => 'File destinazione gi&agrave; esistente e non si pu&ograve; sovrascrivere.',
-                'pt_BR' => 'O arquivo de destino j&aacute; existe e n&atilde;o p&ocirc;de ser sobrescrito.',
-                'ru'    => '&#x426;&#x435;&#x43b;&#x435;&#x432;&#x43e;&#x439; &#x444;&#x430;&#x439;&#x43b; &#x443;&#x436;&#x435; &#x441;&#x443;&#x449;&#x435;&#x441;&#x442;&#x432;&#x443;&#x435;&#x442; &#x438; &#x43d;&#x435; &#x43c;&#x43e;&#x436;&#x435;&#x442; &#x431;&#x44b;&#x442;&#x44c; &#x43f;&#x435;&#x440;&#x435;&#x437;&#x430;&#x43f;&#x438;&#x441;&#x430;&#x43d;.',
-                'sv'    => 'Destinationsfilen existerar redan och kunde inte skrivas &ouml;ver.',
-                'da'    => 'Destinationsfilen findes allerede og kunne ikke overskrives.'
-                ),
-            'NOT_ALLOWED_EXTENSION' => array(
-                'es'    => 'Extension de fichero no permitida.',
-                'en'    => 'File extension not permitted.',
-                'et'    => 'Faili laiend pole lubatud.',
-                'de'    => 'Unerlaubte Dateiendung.',
-                'nl'    => 'Niet toegestane bestands-extensie.',
-                'fr'    => 'Le fichier a une extension non autoris&eacute;e.',
-                'it'    => 'Estensione del File non permessa.',
-                'pt_BR' => 'Extens&atilde;o de arquivo n&atilde;o permitida.',
-                'ru'    => '&#x41d;&#x435;&#x434;&#x43e;&#x43f;&#x443;&#x441;&#x442;&#x438;&#x43c;&#x43e;&#x435; &#x440;&#x430;&#x441;&#x448;&#x438;&#x440;&#x435;&#x43d;&#x438;&#x435; &#x444;&#x430;&#x439;&#x43b;&#x430;.',
-                'sv'    => 'Ej till&aring;ten fil&auml;ndelse.',
-                'da'    => 'Ikke tilladt filformat.'
-                ),
-            'PARTIAL' => array(
-                'es'    => 'El fichero fue parcialmente subido',
-                'en'    => 'The file was only partially uploaded.',
-                'et'    => 'Faili &uuml;leslaadimine oli poolik.',
-                'de'    => 'Die Datei wurde unvollst&auml;ndig &uuml;bertragen.',
-                'nl'    => 'Het bestand is slechts gedeeltelijk geupload.',
-                'pt_BR' => 'O arquivo n&atilde;o foi enviado por completo.',
-                'ru'    => '&#x424;&#x430;&#x439;&#x43b; &#x431;&#x44b;&#x43b; &#x437;&#x430;&#x433;&#x440;&#x443;&#x436;&#x435;&#x43d; &#x43b;&#x438;&#x448;&#x44c; &#x447;&#x430;&#x441;&#x442;&#x438;&#x447;&#x43d;&#x43e;.',
-                'sv'    => 'Filen blev endast delvis uppladdad.',
-                'da'    => 'Filen blev kun delvis uploadet.'
-                ),
-            'ERROR' => array(
-                'es'    => 'Error en subida:',
-                'en'    => 'Upload error:',
-                'et'    => 'Viga &uuml;leslaadimisel:',
-                'de'    => 'Fehler beim Upload:',
-                'nl'    => 'Upload fout:',
-                'pt_BR' => 'Erro de upload:',
-                'ru'    => '&#x41e;&#x448;&#x438;&#x431;&#x43a;&#x430; &#x437;&#x430;&#x433;&#x440;&#x443;&#x437;&#x43a;&#x438;:',
-                'sv'    => 'Fel vid upladdning:',
-                'da'    => 'Fejl ved upload:'
-                ),
-            'DEV_NO_DEF_FILE' => array(
-                'es'    => 'No est&aacute; definido en el formulario este nombre de fichero como &lt;input type="file" name=?&gt;.',
-                'en'    => 'This filename is not defined in the form as &lt;input type="file" name=?&gt;.',
-                'et'    => 'Failinimi ei olnud vormistatud htmlis &lt;input type="file" name=?&gt;.',
-                'de'    => 'Dieser Dateiname ist im Formular nicht als &lt;input type="file" name=?&gt; definiert.',
-                'nl'    => 'Deze bestandsnaam is niett gedefineerd in het formulier als &lt;input type="file" name=?&gt;.',
-                'pt_BR' => 'Este arquivo n&atilde;o foi definido no formul&aacute;rio como  &lt;input type="file" name=?&gt;.',
-                'ru'    => '&#x42d;&#x442;&#x43e; &#x438;&#x43c;&#x44f; &#x444;&#x430;&#x439;&#x43b;&#x430; &#x43e;&#x442;&#x441;&#x443;&#x442;&#x441;&#x442;&#x432;&#x43e;&#x432;&#x430;&#x43b;&#x43e; &#x432; &#x444;&#x43e;&#x440;&#x43c;&#x435; &#x43a;&#x430;&#x43a; &#x43f;&#x43e;&#x43b;&#x435; &lt;input type="file" name=?&gt;.',
-                'sv'    => 'Detta filnamn &auml;r inte definierat i formul&auml;ret som &lt;input type="file" name=?&gt;.',
-                'da'    => 'Dette filnavn er ikke definieret i formularen som &lt;input type="file" name=?&gt;.'
-                )
-        );
+        $this->_maxsize = $maxsize;
+
+        $this->_loadLanguage('en');
+        $this->_loadLanguage($lang);
     }
 
     /**
@@ -293,18 +113,18 @@ class HTTP_Upload_Error extends PEAR
      */
     function errorCode($e_code)
     {
-        if (!empty($this->error_codes[$e_code][$this->lang])) {
+        if (!empty($this->error_codes[$this->lang][$e_code])) {
             $msg = $this->html ?
-                html_entity_decode($this->error_codes[$e_code][$this->lang]) :
-                $this->error_codes[$e_code][$this->lang];
+                html_entity_decode($this->error_codes[$this->lang][$e_code]) :
+                $this->error_codes[$this->lang][$e_code];
         } else {
             $msg = $e_code;
         }
 
-        if (!empty($this->error_codes['ERROR'][$this->lang])) {
-            $error = $this->error_codes['ERROR'][$this->lang];
+        if (!empty($this->error_codes[$this->lang]['ERROR'])) {
+            $error = $this->error_codes[$this->lang]['ERROR'];
         } else {
-            $error = $this->error_codes['ERROR']['en'];
+            $error = $this->error_codes['en']['ERROR'];
         }
         return $error.' '.$msg;
     }
@@ -319,6 +139,43 @@ class HTTP_Upload_Error extends PEAR
     function raiseError($e_code)
     {
         return PEAR::raiseError($this->errorCode($e_code), $e_code);
+    }
+
+
+    /**
+     * Loads language strings into error codes variable
+     *
+     * @param string $lang Language code (2-letter or pt_BR)
+     *
+     * @return mixed PEAR_Error on error, boolean true if all went well
+     */
+    function _loadLanguage($lang)
+    {
+        //prepare some variables
+        $maxsize = $this->_maxsize;
+
+        //when running from svn
+        $local = dirname(__FILE__) . '/../data/' . $lang . '.php';
+        if (file_exists($local)) {
+            include $local;
+        } else {
+            include_once 'PEAR/Config.php';
+            $dataf = PEAR_Config::singleton()->get('data_dir')
+                . '/HTTP_Upload/' . $lang . '.php';
+            if (!file_exists($dataf)) {
+                //that's a bad error here
+                return PEAR::raiseError('Language file could not be loaded');
+            }
+            include $dataf;
+        }
+
+        if (!isset($errorCodes[$lang])) {
+            return PEAR::raiseError(
+                'No language found in ' . $lang . ' language file'
+            );
+        }
+        $this->error_codes[$lang] = $errorCodes[$lang];
+        return true;
     }
 }
 

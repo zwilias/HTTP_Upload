@@ -1,14 +1,18 @@
-<html><body>
-<form action="<?php echo $_SERVER['PHP_SELF'];?>?submit=1" method="post" enctype="multipart/form-data">
-   Send these files:<br>
-  <input type="hidden" name="MAX_FILE_SIZE" value="100000">
+<?xml version="1.0" encoding="utf-8" ?>
+<html>
+ <head>
+  <title>HTTP_Upload example</title>
+ </head>
+ <body>
+  <form action="<?php echo $_SERVER['PHP_SELF'];?>?submit=1" method="post" enctype="multipart/form-data">
+   Send these files:<br/>
+   <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
    
-   <input name="userfile" type="file"> &lt;-<br>
-   <input name="otherfile[]" type="file"><br>
-   <input name="otherfile[]" type="file"><br>
-   <input type="submit" value="Send files">
-</form>
-</body></html>
+   <input name="userfile" type="file"> &lt;-<br/>
+   <input name="otherfile[]" type="file"><br/>
+   <input name="otherfile[]" type="file"><br/>
+   <input type="submit" value="Send files"/>
+  </form>
 <?php
 error_reporting(E_ALL);
 if (!isset($_GET["submit"])) {
@@ -17,7 +21,7 @@ if (!isset($_GET["submit"])) {
 require 'HTTP/Upload.php';
 echo '<pre>';
 
-$upload = new http_upload('es');
+$upload = new Http_Upload('de');
 $file = $upload->getFiles('userfile');
 if (PEAR::isError($file)) {
     die ($file->getMessage());
@@ -39,3 +43,5 @@ if ($file->isValid()) {
 print_r($file->getProp());
 echo '</pre>';
 ?>
+ </body>
+</html>

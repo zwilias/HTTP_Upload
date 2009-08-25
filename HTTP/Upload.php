@@ -819,7 +819,21 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-     * Function to restrict the valid extensions on file uploads
+     * Returns an array with all valid file extensions.
+     *
+     * @return array Array of extensions without dot.
+     *
+     * @access public
+     */
+    function getValidExtensions()
+    {
+        return $this->_extensionsCheck;
+    }
+
+    /**
+     * Function to restrict the valid extensions on file uploads.
+     * Restrictions are applied to the name of the file on the user's
+     * disk, not the destination file name used at moveTo().
      *
      * @param array $exts File extensions to validate
      * @param string $mode The type of validation:
@@ -827,6 +841,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      *                       2) 'accept' Will accept only the supplied extensions
      *                                   as valid
      * @param bool $case_sensitive whether extension check is case sensitive.
+     *                             When it is case insensitive, the extension
+     *                             is lowercased before compared to the array
+     *                             of valid extensions.
      * @access public
      */
     function setValidExtensions($exts, $mode = 'deny', $case_sensitive = null)
@@ -839,7 +856,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     }
 
     /**
-     * Evaluates the validity of the extensions set by setValidExtensions
+     * Evaluates the validity of the extensions set by setValidExtensions.
+     * Checks the validity of the file extension of the original filename
+     * the user used for the file on his disk.
      *
      * @return bool False on non valid extension, true if they are valid
      * @access private

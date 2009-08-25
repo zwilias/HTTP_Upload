@@ -27,7 +27,7 @@ if (PEAR::isError($file)) {
     die ($file->getMessage());
 }
 if ($file->isValid()) {
-    $file->setName('uniq');
+    $file->setName('uniq');$file->setName('test.php');
     $dest_dir = './uploads/';
     $dest_name = $file->moveTo($dest_dir);
     if (PEAR::isError($dest_name)) {

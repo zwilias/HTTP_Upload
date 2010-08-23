@@ -610,11 +610,11 @@ class HTTP_Upload_File extends HTTP_Upload_Error
             $basename = substr( $this->upload['real'],0, $baselength );
 
             //here's the pattern we're looking for
-            $pattern = '(\[)([[:digit:]]+)(\])$';
+            $pattern = '/(\[)([[:digit:]]+)(\])$/';
 
             //just incase the original filename had a sequence, we take it out 
             // e.g: 'userGuide[3]' should become 'userGuide'
-            $basename =  ereg_replace($pattern, '', $basename);
+            $basename =  preg_replace($pattern, '', $basename);
         	
             /*
              * attempt to find a unique sequence file name

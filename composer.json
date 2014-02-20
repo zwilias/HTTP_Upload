@@ -1,0 +1,42 @@
+{
+    "authors": [
+        {
+            "email": "cox@idecnet.com",
+            "name": "Tomas V.V.Cox",
+            "role": "Lead"
+        },
+        {
+            "email": "wenz@php.net",
+            "name": "Christian Wenz",
+            "role": "Lead"
+        },
+        {
+            "email": "antonio@php.net",
+            "name": "Ant\u00f4nio Carlos Ven\u00e2ncio J\u00fanior",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "HTTP": "./"
+        }
+    },
+    "description": "More info available on: http://pear.php.net/package/HTTP_Upload",
+    "include-path": [
+        "./"
+    ],
+    "license": "LGPL",
+    "name": "pear/http_upload",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=HTTP_Upload",
+        "source": "https://github.com/pear/HTTP_Upload"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear_exception": "*",
+        "pear/pear": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}

@@ -9,7 +9,7 @@ $up = new HTTP_Upload();
 $file = $up->getFiles('userfile');
 echo "Valid: ";   var_dump($file->isValid());
 echo "Missing: "; var_dump($file->isMissing());
-echo "Error: ";   var_dump($file->isError());
+echo "Error: ";   var_dump($file->hasError());
 
 $tmp = sys_get_temp_dir();
 $name = $file->moveTo($tmp);
@@ -32,7 +32,7 @@ array(8) {
   ["ext"]=>
   string(0) ""
   ["tmp_name"]=>
-  string(28) "%s"
+  string(%d) "%s"
   ["size"]=>
   int(10)
   ["type"]=>

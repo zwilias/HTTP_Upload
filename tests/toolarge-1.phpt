@@ -11,7 +11,7 @@ $up = new HTTP_Upload();
 $file = $up->getFiles('userfile');
 echo "Valid: ";   var_dump($file->isValid());
 echo "Missing: "; var_dump($file->isMissing());
-echo "Error: ";   var_dump($file->isError());
+echo "Error: ";   var_dump($file->hasError());
 
 var_dump($file->getProp());
 ?>
@@ -29,7 +29,7 @@ array(8) {
   ["ext"]=>
   NULL
   ["tmp_name"]=>
-  string(28) "%s"
+  string(%d) "%s"
   ["size"]=>
   int(10)
   ["type"]=>

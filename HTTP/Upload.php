@@ -727,7 +727,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      *              because the file excess the max permitted file size)
      * @access public
      */
-    function isError()
+    static function isError()
     {
         if (in_array($this->upload['error'], array('TOO_LARGE', 'BAD_FORM','DEV_NO_DEF_FILE'))) {
             return true;

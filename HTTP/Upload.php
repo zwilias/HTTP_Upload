@@ -67,16 +67,6 @@ class HTTP_Upload_Error extends PEAR
     var $html = false;
 
     /**
-     * PHP4 Constructor
-     * 
-     * @see __construct()
-     */
-    function HTTP_Upload_Error($lang = null, $html = false)
-    {
-        $this->__construct($lang, $html);
-    }
-
-    /**
      * PHP5 Constructor
      *
      * Creates a new PEAR_Error
@@ -113,6 +103,16 @@ class HTTP_Upload_Error extends PEAR
 
         $this->_loadLanguage('en');
         $this->_loadLanguage($lang);
+    }
+
+    /**
+     * PHP4 Constructor
+     *
+     * @see __construct()
+     */
+    function HTTP_Upload_Error($lang = null, $html = false)
+    {
+        self::__construct($lang, $html);
     }
 
     /**
@@ -235,25 +235,15 @@ class HTTP_Upload extends HTTP_Upload_Error
     );
 
     /**
-     * PHP4 Constructor
-     *
-     * @see __constructor
-     */
-    function HTTP_Upload($lang = null)
-    {
-        $this->__construct($lang);
-    }
-
-    /**
      * PHP5 Constructor
      *
      * @param string $lang Language to use for reporting errors
      * @see Upload_Error::error_codes
      * @access public
      */
-    function __construct$lang = null)
+    function __construct($lang = null)
     {
-        $this->HTTP_Upload_Error($lang);
+        parent::__construct($lang);
         if (function_exists('version_compare') &&
             version_compare(phpversion(), '4.1', 'ge'))
         {
@@ -268,6 +258,16 @@ class HTTP_Upload extends HTTP_Upload_Error
                 $this->content_type = $HTTP_SERVER_VARS['CONTENT_TYPE'];
             }
         }
+    }
+
+    /**
+     * PHP4 Constructor
+     *
+     * @see __constructor
+     */
+    function HTTP_Upload($lang = null)
+    {
+        self::__construct($lang);
     }
 
     /**
@@ -510,18 +510,6 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     var $_chmod = HTTP_UPLOAD_DEFAULT_CHMOD;
 
     /**
-     * PHP4 Constructor
-     *
-     * @see __construct
-     */
-    function HTTP_Upload_File($name = null, $tmp = null,  $formname = null,
-                              $type = null, $size = null, $error = null, 
-                              $lang = null, $chmod = HTTP_UPLOAD_DEFAULT_CHMOD)
-    {
-        $this->__construct($name, $tmp, $formname, $type, $size, $error, $lang $chmod);
-    }
-
-    /**
      * PHP5 Constructor
      *
      * @param   string  $name       destination file name
@@ -534,10 +522,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @access  public
      */
     function __construct($name = null, $tmp = null,  $formname = null,
-                              $type = null, $size = null, $error = null, 
+                              $type = null, $size = null, $error = null,
                               $lang = null, $chmod = HTTP_UPLOAD_DEFAULT_CHMOD)
     {
-        $this->HTTP_Upload_Error($lang);
+        parent::__construct($lang);
         $ext = null;
 
         if (empty($name)
@@ -579,6 +567,18 @@ class HTTP_Upload_File extends HTTP_Upload_Error
         );
 
         $this->_chmod = $chmod;
+    }
+
+    /**
+     * PHP4 Constructor
+     *
+     * @see __construct
+     */
+    function HTTP_Upload_File($name = null, $tmp = null,  $formname = null,
+                              $type = null, $size = null, $error = null,
+                              $lang = null, $chmod = HTTP_UPLOAD_DEFAULT_CHMOD)
+    {
+        self::__construct($name, $tmp, $formname, $type, $size, $error, $lang, $chmod);
     }
 
     /**

@@ -18,6 +18,7 @@ echo "Error: ";   var_dump($file->hasError());
 var_dump($file->getProp());
 ?>
 --EXPECTF--
+Warning: POST Content-Length of 338 bytes exceeds the limit of 5 bytes in Unknown on line 0
 Valid: bool(false)
 Missing: bool(false)
 Error: bool(true)
